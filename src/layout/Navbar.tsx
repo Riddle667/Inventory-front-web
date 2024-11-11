@@ -14,89 +14,52 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import ImageIcon from '@mui/icons-material/Image';
 import HideImageIcon from '@mui/icons-material/HideImage';
+import { useThemeContext } from "@/context/themes/themesContext";
+import { themes } from "@/context/themes/themes" // Ajusta esta importación si es necesario
 
-interface PrimarySearchAppBarProps {
-  collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
-  hasImage: boolean;
-  setHasImage: (hasImage: boolean) => void;
-  theme: "light" | "dark";
-  setTheme: (theme: "light" | "dark") => void;
-  handleThemeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export const PrimarySearchAppBar: React.FC<PrimarySearchAppBarProps> = ({
-  collapsed,
-  setCollapsed,
-  hasImage,
-  setHasImage,
-  theme,
-  handleThemeChange,
-}) => {
-  const toggleTheme = () => {
-    const event = {
-      target: {
-        checked: theme !== "dark",
-      },
-    };
-    handleThemeChange(event as React.ChangeEvent<HTMLInputElement>);
-  };
+export const PrimarySearchAppBar: React.FC = () => {
+  const { theme, hasImage, toggleTheme, toggleImage, toggleCollapse } = useThemeContext();
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: themes[theme].sidebar.backgroundColor, color: themes[theme].sidebar.color }}>
       <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          onClick={() => setCollapsed(!collapsed)}
-        >
+        <IconButton edge="start" color="inherit" aria-label="open drawer" onClick={ toggleCollapse}>
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}>
+
+        <Typography variant="h6" noWrap component="div" sx={{ display: { xs: 'none', sm: 'block' } }}>
           Dashboard
         </Typography>
+
+        {/* Barra de búsqueda */}
+        <div
+          style={{
+            position: "relative",
+            borderRadius: "4px",
+            backgroundColor: "rgba(255, 255, 255, 0.15)",
+            marginRight: "16px",
+            marginLeft: 10,
+            width: "100%",
+            maxWidth: "300px",
+          }}
+        >
           <div
             style={{
-              position: "relative",
-              borderRadius: "4px",
-              backgroundColor: "rgba(255, 255, 255, 0.15)",
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.25)",
-              },
-              marginRight: "16px",
-              marginLeft: 10,
-              width: "100%",
-              maxWidth: "300px",
+              padding: "0 16px",
+              height: "100%",
+              position: "absolute",
+              pointerEvents: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                padding: "0 16px",
-                height: "100%",
-                position: "absolute",
-                pointerEvents: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              style={{
-                color: "inherit",
-                paddingLeft: "48px",
-                width: "100%",
-              }}
-            />
+            <SearchIcon />
           </div>
+          <InputBase placeholder="Search…" inputProps={{ "aria-label": "search" }} style={{ color: "inherit", paddingLeft: "48px", width: "100%" }} />
+        </div>
+
+        {/* Sección de acciones */}
         <div style={{ display: "flex", alignItems: "center", marginLeft: "auto" }}>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
@@ -108,26 +71,21 @@ export const PrimarySearchAppBar: React.FC<PrimarySearchAppBarProps> = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton
-            color="inherit"
-            aria-label="change theme"
-            onClick={toggleTheme}
-          >
+
+          {/* Cambiar tema */}
+          <IconButton color="inherit" aria-label="change theme" onClick={toggleTheme}>
             {theme === "dark" ? <LightModeIcon /> : <DarkModeIcon />}
           </IconButton>
-          <IconButton
-            color="inherit"
-            aria-label="toggle image"
-            onClick={() => setHasImage(!hasImage)}
-          >
+
+          {/* Imagen del producto */}
+          <IconButton color="inherit" aria-label="toggle image" onClick={toggleImage}>
             <Badge color="secondary">
               {hasImage ? <HideImageIcon /> : <ImageIcon />}
             </Badge>
           </IconButton>
-          <IconButton
-            color="inherit"
-            aria-label="User Image"
-          >
+
+          {/* Imagen de usuario */}
+          <IconButton color="inherit" aria-label="User Image">
             <Avatar alt="User Image" src="/path/to/user/image.jpg" />
           </IconButton>
         </div>

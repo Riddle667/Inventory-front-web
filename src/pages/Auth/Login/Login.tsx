@@ -50,9 +50,10 @@ const Login: React.FC<LoginProps> = () => {
     e.preventDefault();
     
     try {
+      console.log("loginData", loginData);
       const response = await LoginUseCase(loginData.email, loginData.password);
 
-      const user = response.userData;
+      const user = response.data;
       dispatch(createUser(user));
       navigate(`/${PrivateRoutes.PRIVATE}`, {replace: true});
     } catch (error:any) {
@@ -106,7 +107,6 @@ const Login: React.FC<LoginProps> = () => {
               className="input"
               required
               fullWidth
-              multiline
               variant="filled"
               onChange={dataLogin}
             />

@@ -1,5 +1,6 @@
-import { createSlice, Slice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { User } from "../../models/user";
+import { clearLocalStorage, persistLocalStorage } from "@/utilities";
 
 
 export const UserEmptyState: User = {
@@ -7,17 +8,30 @@ export const UserEmptyState: User = {
     lastname: "",
     email: "",
     phone: "",
+    image: "",
 };
 
-export const userSlice: Slice<User> = createSlice({
-    name: "user",
-    initialState: UserEmptyState,
+export const UserKey = "user";
+
+export const userSlice = createSlice({
+    name: 'user',
+    initialState: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : UserEmptyState,
     reducers: {
-        createUser: (state, action) => action.payload,
-        modifyUser: (state, action) => ({ ...state, ...action.payload }),
-        resetUser: () => UserEmptyState,
-    },
-});
+      createUser: (state, action) => {
+        persistLocalStorage<User>(UserKey, action.payload);
+        return action.payload;
+      },
+      modifyUser: (state, action) => {
+        const result = { ...state, ...action.payload };
+        persistLocalStorage<User>(UserKey, result);
+        return result;
+      },
+      resetUser: () => {
+        clearLocalStorage(UserKey);
+        return UserEmptyState;
+      }
+    }
+  });
 
 export const { createUser, modifyUser, resetUser } = userSlice.actions;
 

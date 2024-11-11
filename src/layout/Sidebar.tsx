@@ -1,5 +1,3 @@
-import { Badge, SidebarHeader, Typography } from "@/components";
-import { BarChart, Book, Calendar, Diamond, Global, InkBottle, Service, ShoppingCart } from "@/icons";
 import React from "react";
 import {
   Sidebar,
@@ -9,105 +7,35 @@ import {
   MenuItemStyles,
   menuClasses,
 } from "react-pro-sidebar";
+import { useThemeContext } from "@/context/themes/themesContext";
+import { themes, hexToRgba } from "@/context/themes/themes";
+import { Dashboard, Inventory, People, Category, ShoppingCart, Money, BarChart, Settings,} from "@mui/icons-material";
+import {SidebarHeader, Typography } from "@/components";
 
-type Theme = "light" | "dark";
+export const AppSidebar: React.FC = () => {
+  const { theme, hasImage, collapsed } = useThemeContext();
 
-const themes = {
-  light: {
-    sidebar: {
-      backgroundColor: "#ffffff",
-      color: "#607489",
-    },
-    menu: {
-      menuContent: "#fbfcfd",
-      icon: "#0098e5",
-      hover: {
-        backgroundColor: "#c5e4ff",
-        color: "#44596e",
-      },
-      disabled: {
-        color: "#9fb6cf",
-      },
-    },
-  },
-  dark: {
-    sidebar: {
-      backgroundColor: "#0b2948",
-      color: "#8ba1b7",
-    },
-    menu: {
-      menuContent: "#082440",
-      icon: "#59d0ff",
-      hover: {
-        backgroundColor: "#00458b",
-        color: "#b6c8d9",
-      },
-      disabled: {
-        color: "#3e5e7e",
-      },
-    },
-  },
-};
-
-// hex to rgba converter
-const hexToRgba = (hex: string, alpha: number) => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-};
-
-interface AppSidebarProps {
-  collapsed: boolean;
-  setCollapsed: (collapsed: boolean) => void;
-  hasImage: boolean;
-  theme: Theme;
-}
-
-export const AppSidebar: React.FC<AppSidebarProps> = ({
-  collapsed,
-  hasImage,
-  theme,
-}) => {
   const menuItemStyles: MenuItemStyles = {
-    root: {
-      fontSize: "13px",
-      fontWeight: 400,
-    },
+    root: { fontSize: "13px", fontWeight: 400 },
     icon: {
       color: themes[theme].menu.icon,
-      [`&.${menuClasses.disabled}`]: {
-        color: themes[theme].menu.disabled.color,
-      },
+      [`&.${menuClasses.disabled}`]: { color: themes[theme].menu.disabled.color },
     },
-    SubMenuExpandIcon: {
-      color: "#b6b7b9",
-    },
+    SubMenuExpandIcon: { color: "#b6b7b9" },
     subMenuContent: ({ level }) => ({
       backgroundColor:
         level === 0
-          ? hexToRgba(
-              themes[theme].menu.menuContent,
-              hasImage && !collapsed ? 0.4 : 1
-            )
+          ? hexToRgba(themes[theme].menu.menuContent, hasImage && !collapsed ? 0.4 : 1)
           : "transparent",
     }),
     button: {
-      [`&.${menuClasses.disabled}`]: {
-        color: themes[theme].menu.disabled.color,
-      },
+      [`&.${menuClasses.disabled}`]: { color: themes[theme].menu.disabled.color },
       "&:hover": {
-        backgroundColor: hexToRgba(
-          themes[theme].menu.hover.backgroundColor,
-          hasImage ? 0.8 : 1
-        ),
+        backgroundColor: hexToRgba(themes[theme].menu.hover.backgroundColor, hasImage ? 0.8 : 1),
         color: themes[theme].menu.hover.color,
       },
     },
-    label: ({ open }) => ({
-      fontWeight: open ? 600 : undefined,
-    }),
+    label: ({ open }) => ({ fontWeight: open ? 600 : undefined }),
   };
 
   return (
@@ -116,13 +44,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
       image="https://user-images.githubusercontent.com/25878302/144499035-2911184c-76d3-4611-86e7-bc4e8ff84ff5.jpg"
       rtl={false}
       breakPoint="md"
-      backgroundColor={hexToRgba(
-        themes[theme].sidebar.backgroundColor,
-        hasImage ? 0.9 : 1
-      )}
-      rootStyles={{
-        color: themes[theme].sidebar.color,
-      }}
+      backgroundColor={hexToRgba(themes[theme].sidebar.backgroundColor, hasImage ? 0.9 : 1)}
+      rootStyles={{ color: themes[theme].sidebar.color }}
     >
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <SidebarHeader
@@ -140,43 +63,59 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
             </Typography>
           </div>
           <Menu menuItemStyles={menuItemStyles}>
-            <SubMenu
-              label="Charts"
-              icon={<BarChart />}
-              suffix={
-                <Badge variant="danger" shape="circle">
-                  6
-                </Badge>
-              }
-            >
-              <MenuItem> Pie charts</MenuItem>
-              <MenuItem> Line charts</MenuItem>
-              <MenuItem> Bar charts</MenuItem>
+            {/* Dashboard Overview */}
+            <MenuItem icon={<Dashboard />}>Dashboard</MenuItem>
+
+            {/* Gestión de Productos */}
+            <SubMenu label="Productos" icon={<Inventory />}>
+              <MenuItem>Crear Producto</MenuItem>
+              <MenuItem>Actualizar Producto</MenuItem>
+              <MenuItem>Eliminar Producto</MenuItem>
+              <MenuItem>Ver Todos los Productos</MenuItem>
             </SubMenu>
-            <SubMenu label="Maps" icon={<Global />}>
-              <MenuItem> Google maps</MenuItem>
-              <MenuItem> Open street maps</MenuItem>
+
+            {/* Gestión de Clientes */}
+            <SubMenu label="Clientes" icon={<People />}>
+              <MenuItem>Crear Cliente</MenuItem>
+              <MenuItem>Actualizar Cliente</MenuItem>
+              <MenuItem>Eliminar Cliente</MenuItem>
+              <MenuItem>Ver Todos los Clientes</MenuItem>
             </SubMenu>
-            <SubMenu label="Theme" icon={<InkBottle />}>
-              <MenuItem> Dark</MenuItem>
-              <MenuItem> Light</MenuItem>
+
+            {/* Gestión de Categorías */}
+            <SubMenu label="Categorías" icon={<Category />}>
+              <MenuItem>Crear Categoría</MenuItem>
+              <MenuItem>Actualizar Categoría</MenuItem>
+              <MenuItem>Eliminar Categoría</MenuItem>
+              <MenuItem>Ver Todas las Categorías</MenuItem>
             </SubMenu>
-            <SubMenu label="Components" icon={<Diamond />}>
-              <MenuItem> Grid</MenuItem>
-              <MenuItem> Layout</MenuItem>
-              <SubMenu label="Forms">
-                <MenuItem> Input</MenuItem>
-                <MenuItem> Select</MenuItem>
-                <SubMenu label="More">
-                  <MenuItem> CheckBox</MenuItem>
-                  <MenuItem> Radio</MenuItem>
-                </SubMenu>
-              </SubMenu>
+
+            {/* Órdenes y Ventas */}
+            <SubMenu label="Órdenes y Ventas" icon={<ShoppingCart />}>
+              <MenuItem>Registrar Orden</MenuItem>
+              <MenuItem>Ver Órdenes</MenuItem>
+              <MenuItem>Gestionar Pagos</MenuItem>
             </SubMenu>
-            <SubMenu label="E-commerce" icon={<ShoppingCart />}>
-              <MenuItem> Product</MenuItem>
-              <MenuItem> Orders</MenuItem>
-              <MenuItem> Credit card</MenuItem>
+
+            {/* Finanzas y Reportes */}
+            <SubMenu label="Finanzas" icon={<Money />}>
+              <MenuItem>Ingresos Totales</MenuItem>
+              <MenuItem>Pagos Pendientes</MenuItem>
+              <MenuItem>Ventas por Mes</MenuItem>
+            </SubMenu>
+
+            {/* Estadísticas */}
+            <SubMenu label="Estadísticas" icon={<BarChart />}>
+              <MenuItem>Clientes con Deuda</MenuItem>
+              <MenuItem>Productos con Bajo Stock</MenuItem>
+              <MenuItem>Productos Más Vendidos</MenuItem>
+              <MenuItem>Ventas por Categoría</MenuItem>
+            </SubMenu>
+
+            {/* Configuración */}
+            <SubMenu label="Configuración" icon={<Settings />}>
+              <MenuItem>Preferencias</MenuItem>
+              <MenuItem>Seguridad</MenuItem>
             </SubMenu>
           </Menu>
 
@@ -195,22 +134,8 @@ export const AppSidebar: React.FC<AppSidebarProps> = ({
               Extra
             </Typography>
           </div>
-
-          <Menu menuItemStyles={menuItemStyles}>
-            <MenuItem
-              icon={<Calendar />}
-              suffix={<Badge variant="success">New</Badge>}
-            >
-              Calendar
-            </MenuItem>
-            <MenuItem icon={<Book />}>Documentation</MenuItem>
-            <MenuItem disabled icon={<Service />}>
-              Examples
-            </MenuItem>
-          </Menu>
         </div>
       </div>
     </Sidebar>
   );
 };
-

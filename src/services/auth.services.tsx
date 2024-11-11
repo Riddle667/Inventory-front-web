@@ -15,8 +15,10 @@ export class AuthServicesImpl implements AuthServices {
         email,
         password,
       });
+      console.log("data", data);
       return Promise.resolve(data);
     } catch (error) {
+      console.log("error", error);
       const e = error as AxiosError & ResponseAPI;
       return Promise.reject(e.response?.data);
     }
