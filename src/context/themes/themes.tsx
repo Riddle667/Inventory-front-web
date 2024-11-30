@@ -1,46 +1,136 @@
-// Define aquí el objeto themes con los colores para cada tema
+// Convertidor de colores hex a rgba para definir opacidades
+export const hexToRgba = (hex: string, alpha: number) => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 export const themes = {
-    light: {
-      sidebar: {
-        backgroundColor: "#ffffff", // Fondo del sidebar en tema claro
-        color: "#607489",           // Color de texto en el sidebar para tema claro
+  light: {
+    background: {
+      general: "#f4f6f8", // Fondo general claro
+    },
+    text: {
+      title: "#004680", // Color de títulos
+      subtitle: "#0066cc", // Color de subtítulos
+      paragraph: "#44596e", // Color de párrafos
+    },
+    sidebar: {
+      backgroundColor: "#ffffff",
+      color: "#607489",
+    },
+    menu: {
+      menuContent: "#fbfcfd",
+      icon: "#0098e5",
+      hover: {
+        backgroundColor: "#c5e4ff",
+        color: "#44596e",
       },
-      menu: {
-        menuContent: "#fbfcfd",      // Fondo del contenido del menú
-        icon: "#0098e5",             // Color de los iconos
-        hover: {
-          backgroundColor: "#c5e4ff", // Fondo al pasar el ratón (hover)
-          color: "#44596e",           // Color de texto en hover
-        },
-        disabled: {
-          color: "#9fb6cf",           // Color de texto para elementos deshabilitados
-        },
+      disabled: {
+        color: "#9fb6cf",
       },
     },
-    dark: {
-      sidebar: {
-        backgroundColor: "#0b2948", // Fondo del sidebar en tema oscuro
-        color: "#8ba1b7",           // Color de texto en el sidebar para tema oscuro
-      },
-      menu: {
-        menuContent: "#082440",      // Fondo del contenido del menú
-        icon: "#59d0ff",             // Color de los iconos en tema oscuro
-        hover: {
-          backgroundColor: "#00458b", // Fondo al pasar el ratón (hover) en tema oscuro
-          color: "#b6c8d9",           // Color de texto en hover para tema oscuro
-        },
-        disabled: {
-          color: "#3e5e7e",           // Color de texto para elementos deshabilitados en tema oscuro
-        },
+    button: {
+      backgroundColor: "#0098e5",
+      color: "#ffffff",
+      hoverBackgroundColor: "#007bb5",
+      hoverColor: "#ffffff",
+    },
+    table: {
+      headerBackgroundColor: "#e0f2ff",
+      headerColor: "#005f9e",
+      rowBackgroundColor: "#ffffff",
+      rowColor: "#607489",
+      hoverBackgroundColor: "#f0f8ff",
+      disabledBackgroundColor: "#f5f5f5",
+    },
+    chart: {
+      backgroundColor: "#ffffff",
+      axisColor: "#607489",
+      labelColor: "#005f9e",
+      lineColor: "#0098e5",
+      barColor: "#007bb5",
+      pieColors: ["#0098e5", "#005f9e", "#82cfff"],
+    },
+    alert: {
+      error: '#d32f2f', // Color de error (rojo)
+    },
+    customerDetails: {
+      sectionTitle: '#005f9e', // Títulos de las secciones (azul oscuro)
+      label: '#607489', // Etiquetas (gris oscuro)
+      dynamicData: '#000000', // Datos dinámicos (negro)
+      totalsTitle: '#005f9e', // Títulos de totales (azul oscuro)
+      totalsValue: '#0098e5', // Valores de totales (azul brillante)
+      errorMessage: '#d32f2f', // Mensajes de error (rojo)
+      addOrderButton: {
+        backgroundColor: '#007bb5', // Fondo del botón (azul)
+        color: '#ffffff', // Color del texto del botón (blanco)
       },
     },
-  };
-  
-  // Convertidor de colores hex a rgba para definir opacidades
-  export const hexToRgba = (hex: string, alpha: number) => {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
-  
+  },
+  dark: {
+    background: {
+      general: "#0a1e33", // Fondo general oscuro
+    },
+    text: {
+      title: "#cce7ff", // Color de títulos
+      subtitle: "#82cfff", // Color de subtítulos
+      paragraph: "#8ba1b7", // Color de párrafos
+    },
+    sidebar: {
+      backgroundColor: "#0b2948",
+      color: "#8ba1b7",
+    },
+    menu: {
+      menuContent: "#082440",
+      icon: "#59d0ff",
+      hover: {
+        backgroundColor: "#00458b",
+        color: "#b6c8d9",
+      },
+      disabled: {
+        color: "#3e5e7e",
+      },
+    },
+    button: {
+      backgroundColor: "#59d0ff",
+      color: "#0b2948",
+      hoverBackgroundColor: "#007bb5",
+      hoverColor: "#ffffff",
+    },
+    table: {
+      headerBackgroundColor: "#1b3a5b",
+      headerColor: "#59d0ff",
+      rowBackgroundColor: "rgba(31, 41, 55, 0.2)",
+      rowColor: "#8ba1b7",
+      hoverBackgroundColor: "#12395e",
+      disabledBackgroundColor: "#1f2937",
+    },
+    chart: {
+      backgroundColor: "#0b2948",
+      axisColor: "#8ba1b7",
+      labelColor: "#59d0ff",
+      lineColor: "#59d0ff",
+      barColor: "#007bb5",
+      pieColors: ["#59d0ff", "#005f9e", "#3e5e7e"],
+    },
+    alert: {
+      error: '#ff6f61', // Color de error (rojo claro)
+    },
+    customerDetails: {
+      sectionTitle: '#59d0ff', // Títulos de las secciones (azul claro)
+      label: '#8ba1b7', // Etiquetas (gris claro)
+      dynamicData: '#ffffff', // Datos dinámicos (blanco)
+      totalsTitle: '#59d0ff', // Títulos de totales (azul claro)
+      totalsValue: '#82cfff', // Valores de totales (azul suave)
+      errorMessage: '#ff6f61', // Mensajes de error (rojo claro)
+      addOrderButton: {
+        backgroundColor: '#00458b', // Fondo del botón (azul oscuro)
+        color: '#ffffff', // Color del texto del botón (blanco)
+      },
+    },
+  },
+};
+
+
+

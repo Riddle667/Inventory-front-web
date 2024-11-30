@@ -9,6 +9,7 @@ export const UserEmptyState: User = {
     email: "",
     phone: "",
     image: "",
+    session_token: "",
 };
 
 export const UserKey = "user";

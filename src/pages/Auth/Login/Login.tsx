@@ -19,7 +19,6 @@ import { createUser, resetUser } from "@/redux";
 import { useNavigate } from "react-router-dom";
 import { PrivateRoutes, PublicRoutes } from "@/models";
 
-
 type LoginProps = {
   email: string;
   password: string;
@@ -37,10 +36,10 @@ const Login: React.FC<LoginProps> = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=> {
+  useEffect(() => {
     dispatch(resetUser());
-    navigate(`/${PublicRoutes.LOGIN}`, {replace: true});
-  },[]);
+    navigate(`/${PublicRoutes.LOGIN}`, { replace: true });
+  }, []);
 
   const dataLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -48,30 +47,30 @@ const Login: React.FC<LoginProps> = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     try {
       console.log("loginData", loginData);
       const response = await LoginUseCase(loginData.email, loginData.password);
 
       const user = response.data;
       dispatch(createUser(user));
-      navigate(`/${PrivateRoutes.PRIVATE}`, {replace: true});
-    } catch (error:any) {
+      navigate(`/${PrivateRoutes.PRIVATE}`, { replace: true });
+    } catch (error: any) {
       // Si el error tiene un arreglo `errors`, los procesamos
       if (error.errors && Array.isArray(error.errors)) {
-          const errorMessages = error.errors
-              .map((err: { msg: string }) => err.msg)
-              .join(", "); // Unir todos los mensajes de error en una cadena separada por comas
+        const errorMessages = error.errors
+          .map((err: { msg: string }) => err.msg)
+          .join(", "); // Unir todos los mensajes de error en una cadena separada por comas
 
-          setErrorMessage(`Ocurrió un error al registrar: ${errorMessages}`);
+        setErrorMessage(`Ocurrió un error al registrar: ${errorMessages}`);
       } else {
-          // Si no hay un arreglo de errores, muestra el mensaje genérico
-          setErrorMessage(`Ocurrió un error al registrar: ${error.error || error}`);
+        // Si no hay un arreglo de errores, muestra el mensaje genérico
+        setErrorMessage(
+          `Ocurrió un error al registrar: ${error.error || error}`
+        );
       }
-  }
+    }
   };
-
-  
 
   return (
     <div className="root">
@@ -122,7 +121,8 @@ const Login: React.FC<LoginProps> = () => {
               fullWidth
               variant="filled"
               onChange={dataLogin}
-              InputProps={{ // <-- This is where the toggle button is added.
+              InputProps={{
+                // <-- This is where the toggle button is added.
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -130,10 +130,10 @@ const Login: React.FC<LoginProps> = () => {
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                     >
-                      {showPassword ?  <Visibility /> : <VisibilityOff />}
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
-                )
+                ),
               }}
             />
             {errorMessage && (

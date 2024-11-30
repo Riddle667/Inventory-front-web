@@ -16,9 +16,13 @@ import ImageIcon from '@mui/icons-material/Image';
 import HideImageIcon from '@mui/icons-material/HideImage';
 import { useThemeContext } from "@/context/themes/themesContext";
 import { themes } from "@/context/themes/themes" // Ajusta esta importación si es necesario
+import { AppStore } from "@/redux/store";
+import { useSelector } from "react-redux";
 
 export const PrimarySearchAppBar: React.FC = () => {
   const { theme, hasImage, toggleTheme, toggleImage, toggleCollapse } = useThemeContext();
+  const user = useSelector((store: AppStore) => store.user);
+
 
   return (
     <AppBar position="static" style={{ backgroundColor: themes[theme].sidebar.backgroundColor, color: themes[theme].sidebar.color }}>
@@ -86,7 +90,9 @@ export const PrimarySearchAppBar: React.FC = () => {
 
           {/* Imagen de usuario */}
           <IconButton color="inherit" aria-label="User Image">
-            <Avatar alt="User Image" src="/path/to/user/image.jpg" />
+            {
+              user.image ? <Avatar alt="User Image" src={user.image} /> : <Avatar alt="User Image" src="src/assets/user.png" />
+            }
           </IconButton>
         </div>
       </Toolbar>

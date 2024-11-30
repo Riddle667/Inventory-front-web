@@ -4,15 +4,16 @@ import { PrivateRoutes } from './models';
 import { RouteWithNotFound } from './utilities';
 import { PublicRoutes } from './models';
 import AuthGuard from './guard/Auth.guard';
-import { ThemeContextProvider } from './context/themes/themesContext';
+import { useThemeContext} from './context/themes/themesContext';
+import { themes } from './context';
 
 function App() {
-
+  const { theme } = useThemeContext();
 
   return (
     <>
-    <ThemeContextProvider>
-      <Router>
+      <div style={{ background: themes[theme].background.general }}>
+        <Router>
         <RouteWithNotFound>
           <Route path="/" element={<Navigate to={PrivateRoutes.PRIVATE} /> } />
           <Route path={PublicRoutes.LOGIN} element={<Login email={''} password={''} />} />
@@ -22,7 +23,7 @@ function App() {
           </Route>
         </ RouteWithNotFound>
       </Router>
-    </ThemeContextProvider> 
+      </div>
     </>
   )
 }
