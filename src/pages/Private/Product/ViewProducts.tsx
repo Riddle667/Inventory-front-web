@@ -47,7 +47,11 @@ export const ViewProducts: React.FC = () => {
     inStock: "all", // Nuevo filtro para disponibilidad de stock
   });
   const [openModal, setOpenModal] = useState(false);
-  const [itemToDelete, setItemToDelete] = useState<{ id: number; name: string; type: string } | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{
+    id: number;
+    name: string;
+    type: string;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleDeleteClick = (id: number, name: string, type: string) => {
@@ -60,12 +64,14 @@ export const ViewProducts: React.FC = () => {
       setLoading(true); // Muestra un estado de carga
       try {
         await DeleteProductUseCase(itemToDelete.id, token);
-        
-        console.log(`Elemento eliminado: ${itemToDelete.id} - ${itemToDelete.name}`);
+
+        console.log(
+          `Elemento eliminado: ${itemToDelete.id} - ${itemToDelete.name}`
+        );
         // Aquí puedes actualizar la lista de elementos en la UI.
         fetchProducts();
       } catch (error) {
-        alert('No se pudo eliminar el elemento. Intenta de nuevo.');
+        alert("No se pudo eliminar el elemento. Intenta de nuevo.");
       } finally {
         setLoading(false);
         setOpenModal(false);
@@ -80,25 +86,22 @@ export const ViewProducts: React.FC = () => {
   };
 
   const fetchProducts = async () => {
-      try {
-        const { data } = await ViewProductsUseCase(token);
-        if (Array.isArray(data)) {
-          setProducts(data as Product[]);
-        } else {
-          console.warn("Los datos obtenidos no son un arreglo:", data);
-          setProducts([]);
-        }
-      } catch (error) {
-        const e = error as AxiosError & ResponseAPI;
-        if (
-          e.message === "No token provided" ||
-          e.message === "token expired"
-        ) {
-          dispatch(resetUser());
-          navigate("/", { replace: true });
-        }
+    try {
+      const { data } = await ViewProductsUseCase(token);
+      if (Array.isArray(data)) {
+        setProducts(data as Product[]);
+      } else {
+        console.warn("Los datos obtenidos no son un arreglo:", data);
+        setProducts([]);
       }
-    };
+    } catch (error) {
+      const e = error as AxiosError & ResponseAPI;
+      if (e.message === "No token provided" || e.message === "token expired") {
+        dispatch(resetUser());
+        navigate("/", { replace: true });
+      }
+    }
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -116,11 +119,18 @@ export const ViewProducts: React.FC = () => {
 
   const filteredProducts = products.filter((product) => {
     const matchesFilters =
-      (product.name?.toLowerCase() || "").includes(filters.name.toLowerCase()) &&
-      (product.description?.toLowerCase() || "").includes(filters.description.toLowerCase()) &&
-      (filters.category === "all" || product.category.name === filters.category) &&
-      (filters.minPrice === "" || product.price >= parseFloat(filters.minPrice)) &&
-      (filters.maxPrice === "" || product.price <= parseFloat(filters.maxPrice)) &&
+      (product.name?.toLowerCase() || "").includes(
+        filters.name.toLowerCase()
+      ) &&
+      (product.description?.toLowerCase() || "").includes(
+        filters.description.toLowerCase()
+      ) &&
+      (filters.category === "all" ||
+        product.category.name === filters.category) &&
+      (filters.minPrice === "" ||
+        product.price >= parseFloat(filters.minPrice)) &&
+      (filters.maxPrice === "" ||
+        product.price <= parseFloat(filters.maxPrice)) &&
       (filters.inStock === "all" ||
         (filters.inStock === "yes" && product.stock > 0) ||
         (filters.inStock === "no" && product.stock === 0));
@@ -201,7 +211,7 @@ export const ViewProducts: React.FC = () => {
               onChange={handleInputChange}
               fullWidth
               margin="dense"
-              InputLabelProps={{ style: { color: themes[theme].menu.icon,} }}
+              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
             />
             <TextField
               label="Descripción"
@@ -230,7 +240,7 @@ export const ViewProducts: React.FC = () => {
               onChange={handleInputChange}
               fullWidth
               margin="dense"
-              InputLabelProps={{ style: { color: themes[theme].menu.icon, } }}
+              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
             />
             <select
               name="category"
@@ -275,28 +285,55 @@ export const ViewProducts: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  {["ID", "Nombre", "Descripción", "Precio", "Stock", "Categoría", "Acciones"].map((label, index) => (
+                  {[
+                    "ID",
+                    "Nombre",
+                    "Descripción",
+                    "Precio",
+                    "Stock",
+                    "Categoría",
+                    "Acciones",
+                  ].map((label, index) =>
                     label === "Acciones" ? (
-                      <TableCell key={index} align="center" sx={{ color: themes[theme].menu.icon }}>
+                      <TableCell
+                        key={index}
+                        align="center"
+                        sx={{ color: themes[theme].menu.icon }}
+                      >
                         {label}
                       </TableCell>
                     ) : (
-                      <TableCell key={index} sx={{ color: themes[theme].menu.icon }}>
+                      <TableCell
+                        key={index}
+                        sx={{ color: themes[theme].menu.icon }}
+                      >
                         {label}
                       </TableCell>
                     )
-                  ))}
+                  )}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {filteredProducts.map((product) => (
                   <TableRow key={product.id}>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.id}</TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.name}</TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.description}</TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.price}</TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.stock}</TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>{product.category.name}</TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.id}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.name}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.description}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.price}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.stock}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
+                      {product.category.name}
+                    </TableCell>
                     <TableCell
                       align="center"
                       sx={{
@@ -314,7 +351,9 @@ export const ViewProducts: React.FC = () => {
                       >
                         <IconButton
                           onClick={() => {
-                            navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_PRODUCT}/${product.id}`);
+                            navigate(
+                              `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_PRODUCT}/${product.id}`
+                            );
                           }}
                           sx={{
                             color: "#1976d2",
@@ -328,7 +367,9 @@ export const ViewProducts: React.FC = () => {
                         </IconButton>
                         <IconButton
                           onClick={() => {
-                            navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.UPDATE_PRODUCT}/${product.id}`);
+                            navigate(
+                              `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.UPDATE_PRODUCT}/${product.id}`
+                            );
                           }}
                           sx={{
                             color: "#388e3c",
@@ -342,7 +383,11 @@ export const ViewProducts: React.FC = () => {
                         </IconButton>
                         <IconButton
                           onClick={() => {
-                            handleDeleteClick(product.id, product.name, "product");
+                            handleDeleteClick(
+                              product.id,
+                              product.name,
+                              "product"
+                            );
                           }}
                           sx={{
                             color: "#d32f2f",
@@ -370,7 +415,7 @@ export const ViewProducts: React.FC = () => {
         title="Confirmar Eliminación"
         message={
           loading
-            ? 'Eliminando... Por favor, espera.'
+            ? "Eliminando... Por favor, espera."
             : `¿Estás seguro de que deseas eliminar "${itemToDelete?.name}"? Esta acción no se puede deshacer.`
         }
         confirmButtonText="Eliminar"

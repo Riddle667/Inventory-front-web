@@ -13,7 +13,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import { ArrowBack, Add } from "@mui/icons-material";
+import { ArrowBack, Add, Visibility } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -46,6 +46,7 @@ export const DetailsClient: React.FC = () => {
           Number(id),
           token
         )) as { data: Client };
+        setOrders(clientData.orders ?? []);
         setClient(clientData);
         // Aquí podrías agregar la lógica para obtener las órdenes.
       } catch (error: unknown) {
@@ -55,7 +56,10 @@ export const DetailsClient: React.FC = () => {
         } else {
           alert("Error al crear el cliente. Por favor, intente de nuevo.");
         }
-        if (e.message === "No token provided" || e.message === "token expired") {
+        if (
+          e.message === "No token provided" ||
+          e.message === "token expired"
+        ) {
           dispatch(resetUser());
           navigate("/", { replace: true });
         }
@@ -99,13 +103,12 @@ export const DetailsClient: React.FC = () => {
         <Box
           sx={{
             backgroundColor: themes[theme].sidebar.backgroundColor,
-            color: themes[theme].sidebar.color,
+            color: themes[theme].text.paragraph,
             padding: "2rem",
             borderRadius: "8px",
             width: "90%",
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
             marginTop: "2rem",
-            overflowY: "auto",
           }}
         >
           {/* Encabezado con retroceso y título */}
@@ -160,23 +163,61 @@ export const DetailsClient: React.FC = () => {
               >
                 {/* Información del Cliente */}
                 <Box>
-                  <Typography variant="h5" sx={{ color: themes[theme].customerDetails.sectionTitle }}>Información del Cliente</Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.dynamicData }}>
-                    <strong style={{ color: themes[theme].customerDetails.label }}>Nombre:</strong> {client.name ?? "No hay nombre"}
+                  <Typography
+                    variant="h5"
+                    sx={{ color: themes[theme].customerDetails.sectionTitle }}
+                  >
+                    Información del Cliente
                   </Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.dynamicData }}>
-                    <strong style={{ color: themes[theme].customerDetails.label }}>Apellido:</strong>{" "}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.dynamicData }}
+                  >
+                    <strong
+                      style={{ color: themes[theme].customerDetails.label }}
+                    >
+                      Nombre:
+                    </strong>{" "}
+                    {client.name ?? "No hay nombre"}
+                  </Typography>
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.dynamicData }}
+                  >
+                    <strong
+                      style={{ color: themes[theme].customerDetails.label }}
+                    >
+                      Apellido:
+                    </strong>{" "}
                     {client.lastName ?? "No disponible"}
                   </Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.dynamicData }}>
-                    <strong style={{ color: themes[theme].customerDetails.label }}>Teléfono:</strong> {client.phone ?? "No disponible"}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.dynamicData }}
+                  >
+                    <strong
+                      style={{ color: themes[theme].customerDetails.label }}
+                    >
+                      Teléfono:
+                    </strong>{" "}
+                    {client.phone ?? "No disponible"}
                   </Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.dynamicData }}>
-                    <strong style={{ color: themes[theme].customerDetails.label }}>Dirección:</strong>{" "}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.dynamicData }}
+                  >
+                    <strong
+                      style={{ color: themes[theme].customerDetails.label }}
+                    >
+                      Dirección:
+                    </strong>{" "}
                     {client.address ?? "No disponible"}
                   </Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.dynamicData }}>
-                    <strong style={{ color: themes[theme].customerDetails.label }}>Rut:</strong> {client.rut ?? "No disponible"}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.dynamicData }}
+                  >
+                    <strong
+                      style={{ color: themes[theme].customerDetails.label }}
+                    >
+                      Rut:
+                    </strong>{" "}
+                    {client.rut ?? "No disponible"}
                   </Typography>
                 </Box>
 
@@ -189,11 +230,29 @@ export const DetailsClient: React.FC = () => {
                     gap: "0.5rem", // Espaciado entre el total pagado y la deuda
                   }}
                 >
-                  <Typography sx={{ color: themes[theme].customerDetails.totalsValue }}>
-                    <strong style={{ color: themes[theme].customerDetails.totalsTitle }}>Total Pagado:</strong> ${totalPaid}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.totalsValue }}
+                  >
+                    <strong
+                      style={{
+                        color: themes[theme].customerDetails.totalsTitle,
+                      }}
+                    >
+                      Total Pagado:
+                    </strong>{" "}
+                    ${totalPaid}
                   </Typography>
-                  <Typography sx={{ color: themes[theme].customerDetails.totalsValue }}>
-                    <strong style={{ color: themes[theme].customerDetails.totalsTitle }}>Total Deuda:</strong> ${totalDebt}
+                  <Typography
+                    sx={{ color: themes[theme].customerDetails.totalsValue }}
+                  >
+                    <strong
+                      style={{
+                        color: themes[theme].customerDetails.totalsTitle,
+                      }}
+                    >
+                      Total Deuda:
+                    </strong>{" "}
+                    ${totalDebt}
                   </Typography>
                 </Box>
               </Box>
@@ -213,13 +272,22 @@ export const DetailsClient: React.FC = () => {
                   marginBottom: "1rem",
                 }}
               >
-                <Typography variant="h5" sx={{ color: themes[theme].text.subtitle }}>Órdenes del Cliente</Typography>
+                <Typography
+                  variant="h5"
+                  sx={{ color: themes[theme].text.subtitle }}
+                >
+                  Órdenes del Cliente
+                </Typography>
                 <Button
                   variant="contained"
                   startIcon={<Add />}
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate(PrivateRoutes.CREATE_ORDER);
+                  }}
                   sx={{
-                    backgroundColor: themes[theme].customerDetails.addOrderButton.backgroundColor,
+                    backgroundColor:
+                      themes[theme].customerDetails.addOrderButton
+                        .backgroundColor,
                     color: themes[theme].customerDetails.addOrderButton.color,
                     "&:hover": {
                       backgroundColor: themes[theme].menu.hover,
@@ -231,7 +299,7 @@ export const DetailsClient: React.FC = () => {
               </Box>
 
               {/* Tabla */}
-              
+
               <TableContainer
                 className="mt-3"
                 component={Paper}
@@ -281,14 +349,29 @@ export const DetailsClient: React.FC = () => {
                           {order.pay_method}
                         </TableCell>
                         <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.date}
+                          {order.createdAt
+                            ? new Date(order.createdAt).toLocaleDateString()
+                            : "Fecha no disponible"}
                         </TableCell>
                         <TableCell sx={{ color: themes[theme].menu.icon }}>
                           {order.is_installment ? "Sí" : "No"}
                         </TableCell>
                         <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          <IconButton>
-                            <ArrowBack />
+                          <IconButton
+                            onClick={() => {
+                              navigate(
+                                `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_CLIENTS}/${id}/${PrivateRoutes.DETAILS_ORDER}/${order.id}`
+                              );
+                            }}
+                            sx={{
+                              color: "#1976d2",
+                              backgroundColor: "rgba(25, 118, 210, 0.1)",
+                              "&:hover": {
+                                backgroundColor: "rgba(25, 118, 210, 0.2)",
+                              },
+                            }}
+                          >
+                            <Visibility />
                           </IconButton>
                         </TableCell>
                       </TableRow>
@@ -300,7 +383,10 @@ export const DetailsClient: React.FC = () => {
           )}
 
           {!loading && !error && !orders.length && (
-            <Typography marginTop="30px" sx={{ color: themes[theme].text.paragraph }}>
+            <Typography
+              marginTop="30px"
+              sx={{ color: themes[theme].text.paragraph }}
+            >
               No se encontraron órdenes para este cliente.
             </Typography>
           )}

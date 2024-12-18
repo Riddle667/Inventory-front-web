@@ -3,128 +3,93 @@
 import { useState } from 'react';
 import { BarChart, Card, Divider, Switch } from '@tremor/react';
 
-const data = [
-  {
-    date: 'Jan 23',
-    'This Year': 68560,
-    'Last Year': 28560,
-  },
-  {
-    date: 'Feb 23',
-    'This Year': 70320,
-    'Last Year': 30320,
-  },
-  {
-    date: 'Mar 23',
-    'This Year': 80233,
-    'Last Year': 70233,
-  },
-  {
-    date: 'Apr 23',
-    'This Year': 55123,
-    'Last Year': 45123,
-  },
-  {
-    date: 'May 23',
-    'This Year': 56000,
-    'Last Year': 80600,
-  },
-  {
-    date: 'Jun 23',
-    'This Year': 100000,
-    'Last Year': 85390,
-  },
-  {
-    date: 'Jul 23',
-    'This Year': 85390,
-    'Last Year': 45340,
-  },
-  {
-    date: 'Aug 23',
-    'This Year': 80100,
-    'Last Year': 70120,
-  },
-  {
-    date: 'Sep 23',
-    'This Year': 75090,
-    'Last Year': 69450,
-  },
-  {
-    date: 'Oct 23',
-    'This Year': 71080,
-    'Last Year': 63345,
-  },
-  {
-    date: 'Nov 23',
-    'This Year': 61210,
-    'Last Year': 100330,
-  },
-  {
-    date: 'Dec 23',
-    'This Year': 60143,
-    'Last Year': 45321,
-  },
-];
 
-function valueFormatter(number) {
-  const formatter = new Intl.NumberFormat('en-US', {
+interface BarChartComponentProps {
+  title?: string;
+  description?: string;
+  data: DataEntry[]; // Lista de objetos para los datos del gráfico
+  defaultCategories: string[]; // Categorías visibles por defecto
+  comparisonCategories: string[]; // Categorías adicionales para comparación
+  colors: string[]; // Colores asociados a las categorías por defecto
+  comparisonColors: string[]; // Colores asociados a las categorías de comparación
+  index: string; // Índice para agrupar datos (e.g., "date")
+}
+
+interface DataEntry {
+  date: string;
+  [key: string]: number | string; // Cada categoría será una clave con valores numéricos, excepto 'date'
+}
+
+function valueFormatter(number: number): string {
+  const formatter = new Intl.NumberFormat('es-CL', {
     maximumFractionDigits: 0,
-    notation: 'compact',
-    compactDisplay: 'short',
+    notation: 'standard',
+    compactDisplay: 'long',
     style: 'currency',
-    currency: 'USD',
+    currency: 'CLP',
   });
 
   return formatter.format(number);
 }
 
-export default function Example() {
+export default function BarChartComponent({
+  title = 'Bar Chart',
+  description = '',
+  data = [],
+  defaultCategories = [],
+  comparisonCategories = [],
+  colors = [],
+  comparisonColors = [],
+  index = 'date',
+}: BarChartComponentProps) {
   const [showComparison, setShowComparison] = useState(false);
   return (
-    <>
-      <Card className="sm:mx-auto sm:max-w-2xl">
-        <h3 className="ml-1 mr-1 font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Sales overview
-        </h3>
+    <Card className="sm:mx-auto sm:max-w-2xl">
+      <h3 className="ml-1 mr-1 font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        {title}
+      </h3>
+      {description && (
         <p className="text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
+          {description}
         </p>
-        <BarChart
-          data={data}
-          index="date"
-          categories={
-            showComparison ? ['Last Year', 'This Year'] : ['This Year']
-          }
-          colors={showComparison ? ['cyan', 'blue'] : ['blue']}
-          valueFormatter={valueFormatter}
-          yAxisWidth={50}
-          className="mt-6 hidden h-60 sm:block"
-        />
-        <BarChart
-          data={data}
-          index="date"
-          categories={
-            showComparison ? ['Last Year', 'This Year'] : ['This Year']
-          }
-          colors={showComparison ? ['cyan', 'blue'] : ['blue']}
-          valueFormatter={valueFormatter}
-          showYAxis={false}
-          className="mt-4 h-56 sm:hidden"
-        />
-        <Divider />
-        <div className="mb-2 flex items-center space-x-3">
-          <Switch
-            id="comparison"
-            onChange={() => setShowComparison(!showComparison)}
-          />
-          <label
-            htmlFor="comparison"
-            className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
-          >
-            Show same period last year
-          </label>
-        </div>
-      </Card>
-    </>
+      )}
+      <BarChart
+        data={data}
+        index={index}
+        categories={showComparison ? comparisonCategories : defaultCategories}
+        colors={showComparison ? comparisonColors : colors}
+        valueFormatter={valueFormatter}
+        yAxisWidth={70}
+        className="mt-6 hidden h-60 sm:block"
+      />
+      <BarChart
+        data={data}
+        index={index}
+        categories={showComparison ? comparisonCategories : defaultCategories}
+        colors={showComparison ? comparisonColors : colors}
+        valueFormatter={valueFormatter}
+        showYAxis={false}
+        className="mt-4 h-56 sm:hidden"
+      />
+      {showComparison && (
+        <>
+          <Divider />
+          <div className="mb-2 flex items-center space-x-3">
+            <Switch
+              id="comparison"
+              onChange={() => setShowComparison(!showComparison)}
+            />
+            <label
+              htmlFor="comparison"
+              className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+            >
+              Mostrar comparación de datos del año pasado
+            </label>
+          </div>
+        </>
+      )}
+      
+    </Card>
   );
 }
+

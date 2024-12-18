@@ -89,11 +89,20 @@ export const CreateProduct = () => {
         formData.category_id,
         token
       )) as { data: Product };
-      const response = await UploadUseCase(images, data.id, token);
 
-      //const data = await UploadUseCase(images, id, token);
+      if (images.length > 0) {
+        const response = await UploadUseCase(images, data.id, token);
+        alert("Producto creado exitosamente");
+        //const data = await UploadUseCase(images, id, token);
       alert("Producto creado exitosamente");
       console.log("Respuesta del servidor:", data, response);
+        return;
+      }else{
+        alert("Producto creado exitosamente");
+        console.log("Respuesta del servidor:", data);
+      }
+
+      
     } catch (error) {
       console.error("Error al crear el producto:", error);
       alert("Ocurrió un error al crear el producto.");

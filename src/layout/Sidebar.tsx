@@ -69,29 +69,15 @@ export const AppSidebar: React.FC = () => {
             <MenuItem icon={<Dashboard />} component={<Link to={"/"} />}>Dashboard</MenuItem>
 
             {/* Gestión de Productos */}
-            <SubMenu label="Productos" icon={<Inventory />}>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.CREATE_PRODUCT}` } />}>Crear Producto</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.UPDATE_PRODUCT}`} />}>Actualizar Producto</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DELETE_PRODUCT}`} />}>Eliminar Producto</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_PRODUCTS}`} />}>Ver Todos los Productos</MenuItem>
-            </SubMenu>
+            <MenuItem icon={<Inventory />} component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_PRODUCTS}`} />} >Productos</MenuItem>
 
             {/* Gestión de Clientes */}
-            <SubMenu label="Clientes" icon={<People />}>
-              <MenuItem component={<Link to={`/private/${PrivateRoutes.CREATE_CLIENT}`} />}>Crear Cliente</MenuItem>
-              <MenuItem>Actualizar Cliente</MenuItem>
-              <MenuItem>Eliminar Cliente</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CLIENTS}`} />} >Ver Todos los Clientes</MenuItem>
-            </SubMenu>
+            <MenuItem icon={<People />} component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CLIENTS}`} />} >Clientes</MenuItem>
 
             {/* Gestión de Categorías */}
-            <SubMenu label="Categorías" icon={<Category />}>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.CREATE_CATEGORY}` } />}>Crear Categoría</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.UPDATE_CATEGORY}` } />}>Actualizar Categoría</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DELETE_CATEGORY}` } />}>Eliminar Categoría</MenuItem>
-              <MenuItem component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CATEGORIES}` } />}>Ver Todas las Categorías</MenuItem>
-            </SubMenu>
-
+            
+            <MenuItem icon={<Category />} component={<Link to={`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CATEGORIES}` } />}>Categorías</MenuItem>
+            
             {/* Órdenes y Ventas */}
             <SubMenu label="Órdenes y Ventas" icon={<ShoppingCart />}>
               <MenuItem>Registrar Orden</MenuItem>

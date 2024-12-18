@@ -1,5 +1,6 @@
-// 'use client';
+'use client';
 
+import PropTypes from 'prop-types';
 import {
   Table,
   TableBody,
@@ -9,127 +10,73 @@ import {
   TableRow,
 } from '@tremor/react';
 
-const data = [
-  {
-    workspace: 'sales_by_day_api',
-    owner: 'John Doe',
-    status: 'Live',
-    costs: '$3,509.00',
-    region: 'US-West 1',
-    capacity: '99%',
-    lastEdited: '23/09/2023 13:00',
-  },
-  {
-    workspace: 'marketing_campaign',
-    owner: 'Jane Smith',
-    status: 'Live',
-    costs: '$5,720.00',
-    region: 'US-East 2',
-    capacity: '80%',
-    lastEdited: '22/09/2023 10:45',
-  },
-  {
-    workspace: 'test_environment',
-    owner: 'David Clark',
-    status: 'Inactive',
-    costs: '$800.00',
-    region: 'EU-Central 1',
-    capacity: '40%',
-    lastEdited: '25/09/2023 16:20',
-  },
-  {
-    workspace: 'sales_campaign',
-    owner: 'Jane Smith',
-    status: 'Live',
-    costs: '$5,720.00',
-    region: 'US-East 2',
-    capacity: '80%',
-    lastEdited: '22/09/2023 10:45',
-  },
-  {
-    workspace: 'development_env',
-    owner: 'Mike Johnson',
-    status: 'Inactive',
-    costs: '$4,200.00',
-    region: 'EU-West 1',
-    capacity: '60%',
-    lastEdited: '21/09/2023 14:30',
-  },
-  {
-    workspace: 'new_workspace_1',
-    owner: 'Alice Brown',
-    status: 'Inactive',
-    costs: '$2,100.00',
-    region: 'US-West 2',
-    capacity: '75%',
-    lastEdited: '24/09/2023 09:15',
-  },
-];
+/**
+ * Componente de tabla reutilizable y dinámico.
+ * @param {Object[]} columns - Definición de columnas [{ header: string, accessor: string }]
+ * @param {Object[]} data - Datos para la tabla [{ clave1: valor1, clave2: valor2 }]
+ * @param {string} emptyMessage - Mensaje mostrado cuando no hay datos.
+ */
+interface Column {
+  header: string;
+  accessor: string;
+}
 
-export default function Example() {
+interface DynamicTableProps {
+  columns: Column[];
+  data: Record<string, number>[];
+  emptyMessage?: string;
+}
+
+const DynamicTable = ({ columns, data, emptyMessage = 'No data available.' }: DynamicTableProps) => {
   return (
-    <>
-      <div className="sm:flex sm:items-center sm:justify-between sm:space-x-10">
-        <div>
-          <h3 className="font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Workspaces
-          </h3>
-          <p className="mt-1 text-tremor-default leading-6 text-tremor-content dark:text-dark-tremor-content">
-            Overview of all registered workspaces within your organization.
-          </p>
-        </div>
-        <button
-          type="button"
-          className="mt-4 w-full whitespace-nowrap rounded-tremor-small bg-tremor-brand px-4 py-2.5 text-tremor-default font-medium text-tremor-brand-inverted shadow-tremor-input hover:bg-tremor-brand-emphasis dark:bg-dark-tremor-brand dark:text-dark-tremor-brand-inverted dark:shadow-dark-tremor-input dark:hover:bg-dark-tremor-brand-emphasis sm:mt-0 sm:w-fit"
-        >
-          Add workspace
-        </button>
-      </div>
-      <Table className="mt-8">
-        <TableHead>
-          <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border">
-            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Workspace
+    <Table className="mt-8">
+      <TableHead>
+        <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border">
+          {columns.map((column) => (
+            <TableHeaderCell
+              key={column.accessor}
+              className="text-tremor-content-strong dark:text-dark-tremor-content-strong"
+            >
+              {column.header}
             </TableHeaderCell>
-            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Owner
-            </TableHeaderCell>
-            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Status
-            </TableHeaderCell>
-            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Region
-            </TableHeaderCell>
-            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Capacity
-            </TableHeaderCell>
-            <TableHeaderCell className="text-right text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Costs
-            </TableHeaderCell>
-            <TableHeaderCell className="text-right text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              Last edited
-            </TableHeaderCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((item) => (
+          ))}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {data && data.length > 0 ? (
+          data.map((row, rowIndex) => (
             <TableRow
-              key={item.workspace}
+              key={row.id || rowIndex}
               className="even:bg-tremor-background-muted even:dark:bg-dark-tremor-background-muted"
             >
-              <TableCell className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                {item.workspace}
-              </TableCell>
-              <TableCell>{item.owner}</TableCell>
-              <TableCell>{item.status}</TableCell>
-              <TableCell>{item.region}</TableCell>
-              <TableCell>{item.capacity}</TableCell>
-              <TableCell className="text-right">{item.costs}</TableCell>
-              <TableCell className="text-right">{item.lastEdited}</TableCell>
+              {columns.map((column) => (
+                <TableCell key={column.accessor}>
+                  {typeof row[column.accessor] === 'number' ? new Intl.NumberFormat("es-CL").format(row[column.accessor]) : row[column.accessor] || '-'}
+                </TableCell>
+              ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={columns.length} className="text-center">
+              {emptyMessage}
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
-}
+};
+
+DynamicTable.propTypes = {
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      header: PropTypes.string.isRequired,
+      accessor: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  emptyMessage: PropTypes.string,
+};
+
+export default DynamicTable;

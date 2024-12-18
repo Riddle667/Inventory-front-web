@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Register.css";
 import {
   Box,
@@ -14,10 +14,12 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { RegisterUseCase } from "@/useCase";
-import { PrivateRoutes, User } from "@/models";
+import { PrivateRoutes, PublicRoutes, User } from "@/models";
 import { useDispatch } from "react-redux";
 import { createUser } from "@/redux";
 import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
+import { ResponseAPI } from "@/utilities";
 
 type RegisterProps = {
   name: string;
@@ -52,10 +54,7 @@ const Register: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(()=> {
-    dispatch(resetUser());
-    navigate(`/${PublicRoutes.LOGIN}`, {replace: true});
-  },[]);
+  
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,17 +99,18 @@ const Register: React.FC = () => {
         dispatch(createUser(response.data));
         navigate(`/${PrivateRoutes.PRIVATE}`, {replace:true})
         // Aquí podrías redirigir al usuario o mostrar un mensaje de éxito
-      } catch (error:any) {
+      } catch (error) {
+        const e = error as AxiosError & ResponseAPI;
         // Si el error tiene un arreglo `errors`, los procesamos
-        if (error.errors && Array.isArray(error.errors)) {
-            const errorMessages = error.errors
+        if (e.errors && Array.isArray(e.errors)) {
+            const errorMessages = e.errors
                 .map((err: { msg: string }) => err.msg)
                 .join(", "); // Unir todos los mensajes de error en una cadena separada por comas
 
             setErrorMessage(`Ocurrió un error al registrar: ${errorMessages}`);
         } else {
             // Si no hay un arreglo de errores, muestra el mensaje genérico
-            setErrorMessage(`Ocurrió un error al registrar: ${error.message || error}`);
+            setErrorMessage(`Ocurrió un error al registrar: ${e.message || error}`);
         }
 
         // Log del error para depuración
@@ -262,7 +262,7 @@ const Register: React.FC = () => {
               REGISTER
             </Button>
             <Link
-              href="/"
+              href={`/${PublicRoutes.LOGIN}`}
               variant="body2"
               color="white"
               underline="hover"

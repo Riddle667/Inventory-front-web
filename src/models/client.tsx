@@ -1,3 +1,5 @@
+import { Order } from "./order";
+
 export interface Client{
     id: number;
     name: string;
@@ -8,4 +10,5 @@ export interface Client{
     debt?: number;
     pay?: number;
     isBlackList: boolean;
+    orders?: Order[];
 }

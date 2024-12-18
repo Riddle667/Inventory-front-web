@@ -67,6 +67,27 @@ export const themes = {
         color: '#ffffff', // Color del texto del botón (blanco)
       },
     },
+    form: {
+      inputBackgroundColor: "#ffffff", // Fondo de los campos de texto
+      inputBorderColor: "#c1d4e0", // Borde de los campos de texto
+      inputFocusBorderColor: "#0098e5", // Borde de los campos al estar enfocados
+      inputColor: "#607489", // Color del texto en los campos
+      labelColor: "#44596e", // Color de las etiquetas
+      errorColor: "#d32f2f", // Color para los mensajes de error
+      button: {
+        backgroundColor: "#0098e5", // Fondo del botón en formularios
+        color: "#ffffff", // Color del texto del botón en formularios
+        hoverBackgroundColor: "#007bb5", // Fondo del botón al pasar el ratón
+        hoverColor: "#ffffff", // Color del texto al pasar el ratón
+      },
+    },
+    card: {
+      backgroundColor: "#ffffff", // Fondo de la tarjeta
+      borderColor: "#c1d4e0", // Borde de la tarjeta
+      titleColor: "#004680", // Color del título
+      textColor: "#607489", // Color del texto
+      shadow: "0px 4px 12px rgba(0, 0, 0, 0.1)", // Sombra
+    },
   },
   dark: {
     background: {
@@ -129,8 +150,26 @@ export const themes = {
         color: '#ffffff', // Color del texto del botón (blanco)
       },
     },
+    form: {
+      inputBackgroundColor: "#1f2937", // Fondo de los campos de texto
+      inputBorderColor: "#4b5e6b", // Borde de los campos de texto
+      inputFocusBorderColor: "#59d0ff", // Borde de los campos al estar enfocados
+      inputColor: "#8ba1b7", // Color del texto en los campos
+      labelColor: "#b6c8d9", // Color de las etiquetas
+      errorColor: "#ff6f61", // Color para los mensajes de error
+      button: {
+        backgroundColor: "#59d0ff", // Fondo del botón en formularios
+        color: "#0b2948", // Color del texto del botón en formularios
+        hoverBackgroundColor: "#007bb5", // Fondo del botón al pasar el ratón
+        hoverColor: "#ffffff", // Color del texto al pasar el ratón
+      },
+    },
+    card: {
+      backgroundColor: "#0b2948", // Fondo de la tarjeta
+      borderColor: "#4b5e6b", // Borde de la tarjeta
+      titleColor: "#cce7ff", // Color del título
+      textColor: "#8ba1b7", // Color del texto
+      shadow: "0px 4px 12px rgba(0, 0, 0, 0.3)", // Sombra
+    },
   },
 };
-
-
-

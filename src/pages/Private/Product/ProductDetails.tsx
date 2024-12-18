@@ -14,7 +14,7 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { ArrowBack, Visibility } from "@mui/icons-material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // Estilos para el carrusel
 import { AppSidebar, PrimarySearchAppBar } from "@/layout";
@@ -45,9 +45,17 @@ export const DetailsProduct = () => {
       try {
         const {data} = await GetProductUseCase(Number(id), token); // API para obtener producto
         //const ordersData = await fetchOrdersByProductId(id); // API para obtener órdenes relacionadas
+        
         const product = data as Product;
+        console.log(product);
         setProduct(product);
-        //setOrders(ordersData);
+        for (let i = 0; i < product.orders.length; i++) {
+          const order = product.orders[i].order;
+          if (order) {
+            setOrders((prevOrders) => [...prevOrders, order]);
+          }
+          
+          }
       } catch (error) {
         const e = error as AxiosError & ResponseAPI;
         if (
@@ -212,6 +220,9 @@ export const DetailsProduct = () => {
                       <TableCell sx={{ color: themes[theme].menu.icon }}>
                         Total
                       </TableCell>
+                      <TableCell align="center" sx={{ color: themes[theme].menu.icon }}>
+                        Acciones
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -224,11 +235,37 @@ export const DetailsProduct = () => {
                           {order.client?.name} {order.client?.lastName}
                         </TableCell>
                         <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.date}
+                          {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "Fecha no disponible"}
                         </TableCell>
                         <TableCell sx={{ color: themes[theme].menu.icon }}>
                           ${order.total_price}
                         </TableCell>
+                        <TableCell
+                      align="center"
+                      sx={{
+                        color: themes[theme].menu.icon,
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
+                      
+                        <IconButton
+                          onClick={() => {
+                            navigate(
+                              `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_PRODUCT}/${id}/${PrivateRoutes.DETAILS_ORDER}/${order.id}`
+                            );
+                          }}
+                          sx={{
+                            color: "#1976d2",
+                            backgroundColor: "rgba(25, 118, 210, 0.1)",
+                            "&:hover": {
+                              backgroundColor: "rgba(25, 118, 210, 0.2)",
+                            },
+                          }}
+                        >
+                          <Visibility />
+                        </IconButton>
+                    </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

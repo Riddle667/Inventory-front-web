@@ -28,7 +28,11 @@ export const PrivateRoutes = {
 
     // Section orders and sales
     CREATE_ORDER: 'create-order',
+    UPDATE_ORDER: 'update-order',
+    DELETE_ORDER: 'delete-order',
     VIEW_ORDERS: 'view-orders',
+    DETAILS_ORDER: 'details-order',
+
     MANAGE_PAYMENTS: 'manage-payments',
 
     // Section finances
