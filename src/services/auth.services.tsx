@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 export interface AuthServices {
   login: (email: string, password: string) => Promise<ResponseAPI>;
   register: (user: User) => Promise<ResponseAPI>;
+  logout: (token: string) => Promise<ResponseAPI>;
 }
 
 export class AuthServicesImpl implements AuthServices {
@@ -40,4 +41,24 @@ export class AuthServicesImpl implements AuthServices {
       return Promise.reject(e.response?.data);
     }
   }
+  async logout(token: string): Promise<ResponseAPI> {
+    console.log(token);
+    try {
+      const { data } = await api.post<ResponseAPI>(
+        "/auth/logout",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return Promise.resolve(data);
+    } catch (error) {
+      const e = error as AxiosError & ResponseAPI;
+      return Promise.reject(e.response?.data);
+    }
+  }
+
+  
 }

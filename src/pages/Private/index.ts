@@ -6,6 +6,13 @@ export * from './Client/DeleteClient';
 export * from './Client/UpdateClient';
 export * from './Client/ViewClients';
 export * from './Dashboard/Dashboard';
+export * from './Order/CreateOrder';
+export * from './Order/DetailsOrder';
 export * from './Private';
-export * from './Product/'
+export * from './Product/CreateProduct';
+export * from './Product/DeleteProduct';
+export * from './Product/ProductDetails';
+export * from './Product/UpadateProduct';
+export * from './Product/ViewProducts';
+export * from './Users/Profile';
 export * from './Users/UsersView/UserView';

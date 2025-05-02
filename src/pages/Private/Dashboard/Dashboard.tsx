@@ -1,9 +1,7 @@
-import { Box, Typography, Divider, Grid } from "@mui/material";
+import { Box, Typography, Divider, Grid, Button } from "@mui/material";
 import { themes } from "@/context/themes/themes";
 import { useThemeContext } from "@/context/themes/themesContext";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import BarChartComponent from "@/components/chart/BarChartComponent";
-import DataTableComponent from "@/components/chart/DataTableComponent";
 import { Card } from "@tremor/react";
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
@@ -73,7 +71,7 @@ export const Dashboard = () => {
       const { data } = await GetStatisticsDashboardUseCase();
       setStatistics(data as Statistics);
 
-      const formattedData = await formatSalesData(data.salesByMonth);
+      const formattedData = await formatSalesData((data as Statistics).salesByMonth);
       setSalesData(formattedData);
       setLoading(false);
     } catch (error) {
@@ -89,92 +87,87 @@ export const Dashboard = () => {
   }, [statistics]);
 
   return (
-    <div style={{ display: "flex", height: "100vh", direction: "ltr" }}>
-      {/* Sidebar */}
-      <AppSidebar />
-
-      {/* Main Content */}
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        {/* Top App Bar */}
-        <PrimarySearchAppBar />
-
-        {/* Dashboard Container */}
         <Box
           className="scroll-container"
           sx={{
             backgroundColor: themes[theme].sidebar.backgroundColor,
             color: themes[theme].sidebar.color,
-            padding: "2rem",
-            borderRadius: "8px",
+            padding: 4,
+            borderRadius: 2,
             width: "90%",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            marginTop: "2rem",
-            marginBottom: "2rem",
+            margin: "2rem auto",
+            boxShadow: 3,
             overflowY: "scroll",
+            maxHeight: "calc(100vh - 100px)",
+            scrollbarWidth: "auto", // Firefox
+            "&::-webkit-scrollbar": {
+              width: "8px",
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#888",
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#555",
+            },
           }}
         >
-          {/* Dashboard Header */}
+          {/* Header */}
           <Typography
             variant="h4"
-            sx={{ color: themes[theme].menu.icon, marginBottom: "1rem" }}
+            sx={{ color: themes[theme].menu.icon, mb: 2 }}
           >
             Dashboard de Inventario
           </Typography>
-          <Typography
-            variant="body1"
-            sx={{ marginBottom: "2rem" }}
-          >
+          <Typography variant="body1" sx={{ mb: 4 }}>
             Analiza el rendimiento del inventario y las estadísticas clave para
             optimizar decisiones.
           </Typography>
 
-          {/* General Statistics Section */}
+          {/* Estadísticas Generales */}
           <Typography
             variant="h5"
-            sx={{ color: themes[theme].menu.icon, marginBottom: "1rem" }}
+            sx={{ color: themes[theme].menu.icon, mb: 2 }}
           >
             Estadísticas Generales
           </Typography>
-          <Grid container spacing={3} sx={{ marginBottom: "2rem" }}>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
+              <Card style={{ padding: "16px" }}>
                 <Typography variant="subtitle1">Ingresos Totales</Typography>
                 <Typography variant="h6">
                   {statistics?.totalIncome
                     ? new Intl.NumberFormat("es-CL").format(
-                        statistics?.totalIncome
+                        statistics.totalIncome
                       )
                     : "0"}
                 </Typography>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
-                <Typography variant="subtitle1">Valor del Inventario</Typography>
+              <Card style={{ padding: "16px" }}>
+                <Typography variant="subtitle1">
+                  Valor del Inventario
+                </Typography>
                 <Typography variant="h6">
                   {statistics?.inventoryValue
                     ? new Intl.NumberFormat("es-CL").format(
-                        statistics?.inventoryValue
+                        statistics.inventoryValue
                       )
                     : "0"}
                 </Typography>
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card>
+              <Card style={{ padding: "16px" }}>
                 <Typography variant="subtitle1">Deuda Total</Typography>
                 <Typography variant="h6">
                   {statistics?.installmentTotal
                     ? new Intl.NumberFormat("es-CL").format(
-                        statistics?.installmentTotal
+                        statistics.installmentTotal
                       )
                     : "0"}
                 </Typography>
@@ -182,14 +175,14 @@ export const Dashboard = () => {
             </Grid>
           </Grid>
 
-          {/* Sales Chart Section */}
+          {/* Gráficos de Ventas */}
           <Typography
             variant="h5"
-            sx={{ color: themes[theme].menu.icon, marginBottom: "1rem" }}
+            sx={{ color: themes[theme].menu.icon, mb: 2 }}
           >
             Gráficos de Ventas
           </Typography>
-          <Grid container spacing={3} sx={{ marginBottom: "2rem" }}>
+          <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12}>
               {loading ? (
                 <Typography>Cargando gráfico...</Typography>
@@ -208,52 +201,99 @@ export const Dashboard = () => {
             </Grid>
           </Grid>
 
-          {/* Data Tables Section */}
+          {/* Tablas de Datos */}
           <Typography
             variant="h5"
-            sx={{ color: themes[theme].menu.icon, marginBottom: "1rem" }}
+            sx={{ color: themes[theme].menu.icon, mb: 2 }}
           >
             Tablas de Datos
           </Typography>
 
-          <Divider sx={{ marginY: "2rem" }} />
+          <Divider sx={{ my: 4 }} />
 
-          <Grid container spacing={2}>
-  <Grid item xs={12} sm={6}>
-    <Card>
-      <Typography variant="subtitle1">Clientes con Deudas</Typography>
-      {statistics?.clientsWithDebt?.length ?? 0 > 0 ? (
-        <DynamicTable
-          columns={debtColumns}
-          data={statistics?.clientsWithDebt || []}
-        />
-      ) : (
-        <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
-          No hay clientes con deudas.
-        </Typography>
-      )}
-    </Card>
-  </Grid>
+          <Grid container spacing={3}>
+            {/* Clientes con Deudas */}
+            <Grid item xs={12} md={6}>
+              <Card
+                style={{
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: "primary.main" }}
+                >
+                  Clientes con Deudas
+                </Typography>
 
-  <Grid item xs={12} sm={6}>
-    <Card>
-      <Typography variant="subtitle1">Productos con Bajo Stock</Typography>
-      {statistics?.lowStockProducts?.length ?? 0 > 0 ? (
-        <DynamicTable
-          columns={lowStockColumns}
-          data={statistics?.lowStockProducts || []}
-        />
-      ) : (
-        <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
-          No hay productos con bajo stock.
-        </Typography>
-      )}
-    </Card>
-  </Grid>
-</Grid>
+                {(statistics?.clientsWithDebt ?? []).length > 0 ? (
+                  <>
+                    <DynamicTable
+                      columns={debtColumns}
+                      data={statistics?.clientsWithDebt ?? []}
+                    />
+                    <Box mt={2} textAlign="right">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {}}
+                      >
+                        Ver todos
+                      </Button>
+                    </Box>
+                  </>
+                ) : (
+                  <Typography variant="body2" align="center">
+                    No hay clientes con deudas.
+                  </Typography>
+                )}
+              </Card>
+            </Grid>
+
+            {/* Productos con Bajo Stock */}
+            <Grid item xs={12} md={6}>
+              <Card
+                style={{
+                  padding: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ mb: 2, color: "primary.main" }}
+                >
+                  Productos con Bajo Stock
+                </Typography>
+
+                {statistics?.lowStockProducts?.length ?? 0 > 0 ? (
+                  <>
+                    <DynamicTable
+                      columns={lowStockColumns}
+                      data={statistics?.lowStockProducts ?? []}
+                    />
+                    <Box mt={2} textAlign="right">
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {}}
+                      >
+                        Ver todos
+                      </Button>
+                    </Box>
+                  </>
+                ) : (
+                  <Typography variant="body2" align="center">
+                    No hay productos con bajo stock.
+                  </Typography>
+                )}
+              </Card>
+            </Grid>
+          </Grid>
         </Box>
-      </main>
-    </div>
   );
 };
-

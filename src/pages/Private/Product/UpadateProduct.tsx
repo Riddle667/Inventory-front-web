@@ -1,6 +1,5 @@
 import { themes } from "@/context/themes/themes";
 import { useThemeContext } from "@/context/themes/themesContext";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import {
   Box,
   Button,
@@ -82,7 +81,6 @@ export const UpdateProduct = () => {
   const handleRemoveImage = (imageId: number) => {
     setImages(images.filter((img) => img.id !== imageId));
   };
-  
 
   const handleRemoveNewImage = (index: number) => {
     setNewImages(newImages.filter((_, i) => i !== index));
@@ -116,269 +114,255 @@ export const UpdateProduct = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", direction: "ltr" }}>
-      <AppSidebar />
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-        }}
+    <Box
+      sx={{
+        backgroundColor: themes[theme].sidebar.backgroundColor,
+        color: themes[theme].sidebar.color,
+        padding: "2rem",
+        borderRadius: "8px",
+        maxWidth: "500px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        marginTop: "2rem",
+        marginBottom: "2rem",
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ color: themes[theme].menu.icon }}
       >
-        <PrimarySearchAppBar />
-        <Box
+        Actualizar Producto
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        {/* Campos del producto */}
+        <TextField
+          label="Nombre del Producto"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="name"
+          value={formData?.name || ""}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
           sx={{
-            backgroundColor: themes[theme].sidebar.backgroundColor,
-            color: themes[theme].sidebar.color,
-            padding: "2rem",
-            borderRadius: "8px",
-            maxWidth: "500px",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            marginTop: "2rem",
-            marginBottom: "2rem",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: themes[theme].menu.icon,
+              },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
           }}
-        >
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{ color: themes[theme].menu.icon }}
+        />
+        <TextField
+          label="Descripción"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="description"
+          value={formData?.description || ""}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: themes[theme].menu.icon,
+              },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="Precio"
+          type="number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="price"
+          value={formData?.price || ""}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: themes[theme].menu.icon,
+              },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="Cantidad"
+          type="number"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="quantity"
+          value={formData?.stock || ""}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: themes[theme].menu.icon,
+              },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <FormControl fullWidth margin="normal">
+          <Select
+            name="category_id"
+            value={formData?.category_id || ""}
+            onChange={(e) =>
+              handleInputChange(e as React.ChangeEvent<HTMLInputElement>)
+            }
+            displayEmpty
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: themes[theme].menu.icon },
+                "&:hover fieldset": {
+                  borderColor: themes[theme].menu.hover.backgroundColor,
+                },
+              },
+            }}
           >
-            Actualizar Producto
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            {/* Campos del producto */}
-            <TextField
-              label="Nombre del Producto"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="name"
-              value={formData?.name || ""}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+            <MenuItem value="">
+              <em>Selecciona una categoría</em>
+            </MenuItem>
+            {categories.map((category) => (
+              <MenuItem key={category.id} value={category.id}>
+                {category.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        {/* Manejo de imágenes */}
+        <Typography
+          variant="h6"
+          sx={{ marginTop: "1rem", color: themes[theme].menu.icon }}
+        >
+          Imágenes del Producto
+        </Typography>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+          {/* Imágenes existentes */}
+          {images.map((image) => (
+            <Box
+              key={image.id}
               sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: themes[theme].menu.icon,
-                  },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
+                position: "relative",
+                width: "100px",
+                height: "100px",
               }}
-            />
-            <TextField
-              label="Descripción"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="description"
-              value={formData?.description || ""}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: themes[theme].menu.icon,
-                  },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="Precio"
-              type="number"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="price"
-              value={formData?.price || ""}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: themes[theme].menu.icon,
-                  },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="Cantidad"
-              type="number"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="quantity"
-              value={formData?.stock || ""}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: themes[theme].menu.icon,
-                  },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <FormControl fullWidth margin="normal">
-              <Select
-                name="category_id"
-                value={formData?.category_id || ""}
-                onChange={(e) =>
-                  handleInputChange(e as React.ChangeEvent<HTMLInputElement>)
-                }
-                displayEmpty
+            >
+              <img
+                src={image.url}
+                alt="Producto"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                }}
+              />
+              <IconButton
+                onClick={() => handleRemoveImage(image.id)}
                 sx={{
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": { borderColor: themes[theme].menu.icon },
-                    "&:hover fieldset": {
-                      borderColor: themes[theme].menu.hover.backgroundColor,
-                    },
-                  },
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
                 }}
               >
-                <MenuItem value="">
-                  <em>Selecciona una categoría</em>
-                </MenuItem>
-                {categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Manejo de imágenes */}
-            <Typography
-              variant="h6"
-              sx={{ marginTop: "1rem", color: themes[theme].menu.icon }}
-            >
-              Imágenes del Producto
-            </Typography>
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
-              {/* Imágenes existentes */}
-              {images.map((image) => (
-                <Box
-                  key={image.id}
-                  sx={{
-                    position: "relative",
-                    width: "100px",
-                    height: "100px",
-                  }}
-                >
-                  <img
-                    src={image.url}
-                    alt="Producto"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "8px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <IconButton
-                    onClick={() => handleRemoveImage(image.id)}
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      color: "#fff",
-                    }}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Box>
-              ))}
-
-              {/* Nuevas imágenes */}
-              {newImages.map((image, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    position: "relative",
-                    width: "100px",
-                    height: "100px",
-                  }}
-                >
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt="Nueva"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "8px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <IconButton
-                    onClick={() => handleRemoveNewImage(index)}
-                    sx={{
-                      position: "absolute",
-                      top: 0,
-                      right: 0,
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      color: "#fff",
-                    }}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Box>
-              ))}
+                <Delete />
+              </IconButton>
             </Box>
+          ))}
 
-            {/* Botón para subir imágenes */}
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<Upload />}
+          {/* Nuevas imágenes */}
+          {newImages.map((image, index) => (
+            <Box
+              key={index}
               sx={{
-                marginTop: "1rem",
-                color: themes[theme].menu.icon,
-                borderColor: themes[theme].menu.icon,
+                position: "relative",
+                width: "100px",
+                height: "100px",
               }}
             >
-              Subir Imágenes
-              <input
-                hidden
-                accept="image/*"
-                type="file"
-                multiple
-                onChange={handleImageUpload}
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Nueva"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                }}
               />
-            </Button>
-
-            {/* Botón para actualizar producto */}
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                backgroundColor: themes[theme].menu.hover.backgroundColor,
-                color: themes[theme].menu.hover.color,
-                marginTop: "1rem",
-                "&:hover": {
-                  backgroundColor: themes[theme].menu.hover.color,
-                  color: themes[theme].sidebar.backgroundColor,
-                },
-              }}
-            >
-              Actualizar Producto
-            </Button>
-          </form>
+              <IconButton
+                onClick={() => handleRemoveNewImage(index)}
+                sx={{
+                  position: "absolute",
+                  top: 0,
+                  right: 0,
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
+                }}
+              >
+                <Delete />
+              </IconButton>
+            </Box>
+          ))}
         </Box>
-      </main>
-    </div>
+
+        {/* Botón para subir imágenes */}
+        <Button
+          variant="outlined"
+          component="label"
+          startIcon={<Upload />}
+          sx={{
+            marginTop: "1rem",
+            color: themes[theme].menu.icon,
+            borderColor: themes[theme].menu.icon,
+          }}
+        >
+          Subir Imágenes
+          <input
+            hidden
+            accept="image/*"
+            type="file"
+            multiple
+            onChange={handleImageUpload}
+          />
+        </Button>
+
+        {/* Botón para actualizar producto */}
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            backgroundColor: themes[theme].menu.hover.backgroundColor,
+            color: themes[theme].menu.hover.color,
+            marginTop: "1rem",
+            "&:hover": {
+              backgroundColor: themes[theme].menu.hover.color,
+              color: themes[theme].sidebar.backgroundColor,
+            },
+          }}
+        >
+          Actualizar Producto
+        </Button>
+      </form>
+    </Box>
   );
 };

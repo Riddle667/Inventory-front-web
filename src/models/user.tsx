@@ -10,7 +10,7 @@ export interface User {
   password?: string;
   category?: Category[];
   client?: Client[];
-  createdAt?: string;
+  createdAt?: string | Date | number;
   updatedAt?: string;
   session_token?: string;
 }

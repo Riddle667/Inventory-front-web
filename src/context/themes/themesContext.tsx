@@ -1,13 +1,15 @@
-// themesContext.tsx
 import React, { createContext, useContext, useState, useMemo } from 'react';
 
 interface ThemeContextProps {
   theme: 'light' | 'dark';
   hasImage: boolean;
   collapsed: boolean;
+  toggled: boolean;
   toggleTheme: () => void;
   toggleImage: () => void;
   toggleCollapse: () => void;
+  toggleSidebarMobile: () => void;
+  setToggled: (value: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
@@ -25,7 +27,8 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     localStorage.getItem('appTheme') === 'dark' ? 'dark' : 'light'
   );
   const [hasImage, setHasImage] = useState(localStorage.getItem('appHasImage') === 'true');
-  const [collapsed, setCollapsed] = useState(false); // Nuevo estado de colapso
+  const [collapsed, setCollapsed] = useState(false);
+  const [toggled, setToggled] = useState(false); // Nuevo estado para móviles
 
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -39,16 +42,20 @@ export const ThemeContextProvider: React.FC<{ children: React.ReactNode }> = ({ 
     localStorage.setItem('appHasImage', JSON.stringify(newHasImage));
   };
 
-  const toggleCollapse = () => setCollapsed(!collapsed); // Función para alternar colapso
+  const toggleCollapse = () => setCollapsed(!collapsed);
+  const toggleSidebarMobile = () => setToggled(prev => !prev);
 
   const contextValue = useMemo(() => ({
     theme,
     hasImage,
     collapsed,
+    toggled,
     toggleTheme,
     toggleImage,
     toggleCollapse,
-  }), [theme, hasImage, collapsed]);
+    toggleSidebarMobile,
+    setToggled,
+  }), [theme, hasImage, collapsed, toggled]);
 
   return (
     <ThemeContext.Provider value={contextValue}>

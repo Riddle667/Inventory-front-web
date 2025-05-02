@@ -8,6 +8,7 @@ export interface Product{
     description: string;
     price: number;
     stock: number;
+    is_active: boolean;
     category_id: string;
     category: Category;
     created_at: string;

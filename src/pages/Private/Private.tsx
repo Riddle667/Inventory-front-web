@@ -4,14 +4,16 @@ import { RouteWithNotFound } from "@/utilities/RouteWithNotFound"
 import { PrivateRoutes } from "@/models"
 import { DeleteProduct, UpdateProduct, ViewProducts, CreateProduct, DetailsProduct } from "./Product"
 import { CreateClient, DetailsClient, UpdateClient, ViewClients } from "./Client"
-import { CreateCategory, ViewCategories } from "."
+import { CreateCategory, Profile, ViewCategories } from "."
 import { CreateOrder } from "./Order"
 import { DetailsOrder } from "./Order/DetailsOrder"
+import { PrivateLayout } from "@/layout/PrivateLayout"
 
 export const Private = () => {
   return (
     <RouteWithNotFound>
-        <Route path="/" element={<Dashboard />} />
+      <Route path="/" element={<PrivateLayout />}>
+        <Route index element={<Dashboard />} />
         <Route path={PrivateRoutes.CREATE_PRODUCT} element={<CreateProduct/>}/>
         <Route path={`${PrivateRoutes.UPDATE_PRODUCT}/:id`} element={<UpdateProduct />}/>
         <Route path={PrivateRoutes.DELETE_PRODUCT} element={<DeleteProduct />}/>
@@ -32,6 +34,9 @@ export const Private = () => {
         <Route path={`${PrivateRoutes.DETAILS_CLIENTS}/:idC/${PrivateRoutes.DETAILS_ORDER}/:id`} element={<DetailsOrder/>}/>
         <Route path={PrivateRoutes.UPDATE_ORDER} element={<div></div>}/>
         <Route path={PrivateRoutes.DELETE_ORDER} element={<div></div>}/>
+        <Route path={PrivateRoutes.PROFILE} element={<Profile />}/>
+      </Route>
+        
     </RouteWithNotFound>
   )
 }

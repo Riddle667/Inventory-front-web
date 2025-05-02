@@ -10,6 +10,7 @@ export const UserEmptyState: User = {
     phone: "",
     image: "",
     session_token: "",
+    createdAt: ""
 };
 
 export const UserKey = "user";

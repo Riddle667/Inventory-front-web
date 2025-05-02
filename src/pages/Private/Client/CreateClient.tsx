@@ -1,6 +1,5 @@
 import { themes } from "@/context/themes/themes";
 import { useThemeContext } from "@/context/themes/themesContext";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import { AppStore } from "@/redux/store";
 import { CreateClientUseCase } from "@/useCase";
 import { Box, Button, TextField, Typography } from "@mui/material";
@@ -83,150 +82,136 @@ export const CreateClient = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <AppSidebar />
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-        }}
+    <Box
+      sx={{
+        backgroundColor: themes[theme].sidebar.backgroundColor,
+        color: themes[theme].sidebar.color,
+        padding: "2rem",
+        borderRadius: "8px",
+        maxWidth: "500px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        marginTop: "2rem",
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ color: themes[theme].menu.icon }}
       >
-        <PrimarySearchAppBar />
-        <Box
+        Crear Cliente
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Nombre del Cliente"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="name"
+          id="client-name"
+          aria-label="Nombre del Cliente"
+          value={formData.name}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
           sx={{
-            backgroundColor: themes[theme].sidebar.backgroundColor,
-            color: themes[theme].sidebar.color,
-            padding: "2rem",
-            borderRadius: "8px",
-            maxWidth: "500px",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            marginTop: "2rem",
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: themes[theme].menu.icon },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="Apellido"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: themes[theme].menu.icon },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="Teléfono"
+          type="tel"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="phone"
+          value={formData.phone}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: themes[theme].menu.icon },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="Dirección"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="address"
+          value={formData.address}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: themes[theme].menu.icon },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <TextField
+          label="RUT"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          name="rut"
+          value={formData.rut}
+          onChange={handleInputChange}
+          InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": { borderColor: themes[theme].menu.icon },
+              "&:hover fieldset": {
+                borderColor: themes[theme].menu.hover.backgroundColor,
+              },
+            },
+          }}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          sx={{
+            backgroundColor: themes[theme].menu.hover.backgroundColor,
+            color: themes[theme].menu.hover.color,
+            marginTop: "1rem",
+            "&:hover": {
+              backgroundColor: themes[theme].menu.hover.color,
+              color: themes[theme].sidebar.backgroundColor,
+            },
           }}
         >
-          <Typography
-            variant="h4"
-            gutterBottom
-            sx={{ color: themes[theme].menu.icon }}
-          >
-            Crear Cliente
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              label="Nombre del Cliente"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="name"
-              id="client-name"
-              aria-label="Nombre del Cliente"
-              value={formData.name}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: themes[theme].menu.icon },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="Apellido"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: themes[theme].menu.icon },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="Teléfono"
-              type="tel"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: themes[theme].menu.icon },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="Dirección"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="address"
-              value={formData.address}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: themes[theme].menu.icon },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <TextField
-              label="RUT"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              name="rut"
-              value={formData.rut}
-              onChange={handleInputChange}
-              InputLabelProps={{ style: { color: themes[theme].menu.icon } }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: themes[theme].menu.icon },
-                  "&:hover fieldset": {
-                    borderColor: themes[theme].menu.hover.backgroundColor,
-                  },
-                },
-              }}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                backgroundColor: themes[theme].menu.hover.backgroundColor,
-                color: themes[theme].menu.hover.color,
-                marginTop: "1rem",
-                "&:hover": {
-                  backgroundColor: themes[theme].menu.hover.color,
-                  color: themes[theme].sidebar.backgroundColor,
-                },
-              }}
-            >
-              Crear Cliente
-            </Button>
-          </form>
-        </Box>
-      </main>
-    </div>
+          Crear Cliente
+        </Button>
+      </form>
+    </Box>
   );
 };
 

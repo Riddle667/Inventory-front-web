@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetCLientUseCase } from "@/useCase/client";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import { themes, useThemeContext } from "@/context";
 import { Client, Order, PrivateRoutes } from "@/models";
 import { AppStore } from "@/redux/store";
@@ -72,326 +71,290 @@ export const DetailsClient: React.FC = () => {
     fetchClientData();
   }, [id, token]);
 
-  const totalPaid = orders.reduce(
-    (acc, order) => (order.paid ? acc + order.total_price : acc),
-    0
-  );
-  const totalDebt = orders.reduce(
-    (acc, order) => (!order.paid ? acc + order.total_price : acc),
-    0
-  );
-
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        direction: "ltr",
+    <Box
+      sx={{
+        backgroundColor: themes[theme].sidebar.backgroundColor,
+        color: themes[theme].text.paragraph,
+        padding: "2rem",
+        borderRadius: "8px",
+        width: "90%",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        marginTop: "2rem",
       }}
     >
-      <AppSidebar />
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
+      {/* Encabezado con retroceso y título */}
+      <Box
+        sx={{
+          position: "relative",
+          marginBottom: "1rem",
         }}
       >
-        <PrimarySearchAppBar />
-        <Box
+        <IconButton
+          onClick={() =>
+            navigate(`/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CLIENTS}`)
+          }
           sx={{
-            backgroundColor: themes[theme].sidebar.backgroundColor,
-            color: themes[theme].text.paragraph,
-            padding: "2rem",
-            borderRadius: "8px",
-            width: "90%",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            marginTop: "2rem",
+            position: "absolute",
+            left: 0,
           }}
         >
-          {/* Encabezado con retroceso y título */}
+          <ArrowBack sx={{ color: themes[theme].menu.icon }} />
+        </IconButton>
+        <Typography
+          variant="h4"
+          sx={{
+            textAlign: "center",
+            color: themes[theme].text.title,
+          }}
+        >
+          Detalles del Cliente
+        </Typography>
+      </Box>
+
+      {/* Información del cliente */}
+      {loading && (
+        <Box sx={{ textAlign: "center" }}>
+          <CircularProgress />
+          <Typography>Cargando detalles del cliente...</Typography>
+        </Box>
+      )}
+      {error && <Alert severity="error">{error}</Alert>}
+      {!loading && !error && client && (
+        <>
           <Box
             sx={{
-              position: "relative",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start", // Alinea ambos contenedores en la parte superior
+              gap: "2rem", // Espaciado entre la información del cliente y los totales
               marginBottom: "1rem",
             }}
           >
-            <IconButton
-              onClick={() =>
-                navigate(
-                  `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.VIEW_CLIENTS}`
-                )
-              }
+            {/* Información del Cliente */}
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{ color: themes[theme].customerDetails.sectionTitle }}
+              >
+                Información del Cliente
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.dynamicData }}
+              >
+                <strong style={{ color: themes[theme].customerDetails.label }}>
+                  Nombre:
+                </strong>{" "}
+                {client.name ?? "No hay nombre"}
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.dynamicData }}
+              >
+                <strong style={{ color: themes[theme].customerDetails.label }}>
+                  Apellido:
+                </strong>{" "}
+                {client.lastName ?? "No disponible"}
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.dynamicData }}
+              >
+                <strong style={{ color: themes[theme].customerDetails.label }}>
+                  Teléfono:
+                </strong>{" "}
+                {client.phone ?? "No disponible"}
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.dynamicData }}
+              >
+                <strong style={{ color: themes[theme].customerDetails.label }}>
+                  Dirección:
+                </strong>{" "}
+                {client.address ?? "No disponible"}
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.dynamicData }}
+              >
+                <strong style={{ color: themes[theme].customerDetails.label }}>
+                  Rut:
+                </strong>{" "}
+                {client.rut ?? "No disponible"}
+              </Typography>
+            </Box>
+
+            {/* Totales de Deuda y Pago */}
+            <Box
               sx={{
-                position: "absolute",
-                left: 0,
+                display: "flex",
+                flexDirection: "column", // Mantiene los totales en una columna
+                alignItems: "flex-end", // Alinea el contenido a la derecha
+                gap: "0.5rem", // Espaciado entre el total pagado y la deuda
               }}
             >
-              <ArrowBack sx={{ color: themes[theme].menu.icon }} />
-            </IconButton>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.totalsValue }}
+              >
+                <strong
+                  style={{
+                    color: themes[theme].customerDetails.totalsTitle,
+                  }}
+                >
+                  Total Pagado:
+                </strong>{" "}
+                ${client.pay}
+              </Typography>
+              <Typography
+                sx={{ color: themes[theme].customerDetails.totalsValue }}
+              >
+                <strong
+                  style={{
+                    color: themes[theme].customerDetails.totalsTitle,
+                  }}
+                >
+                  Total Deuda:
+                </strong>{" "}
+                ${client.debt}
+              </Typography>
+            </Box>
+          </Box>
+        </>
+      )}
+
+      {/* Tabla de órdenes y botón para agregar */}
+      {!loading && !error && (
+        <>
+          {/* Botón para agregar orden */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start", // Alinea ambos contenedores en la parte superior
+              gap: "2rem", // Espaciado entre la información del cliente y los totales
+              marginBottom: "1rem",
+            }}
+          >
             <Typography
-              variant="h4"
+              variant="h5"
+              sx={{ color: themes[theme].text.subtitle }}
+            >
+              Órdenes del Cliente
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<Add />}
+              onClick={() => {
+                navigate(PrivateRoutes.CREATE_ORDER);
+              }}
               sx={{
-                textAlign: "center",
-                color: themes[theme].text.title,
+                backgroundColor:
+                  themes[theme].customerDetails.addOrderButton.backgroundColor,
+                color: themes[theme].customerDetails.addOrderButton.color,
+                "&:hover": {
+                  backgroundColor: themes[theme].menu.hover,
+                },
               }}
             >
-              Detalles del Cliente
-            </Typography>
+              Agregar Orden
+            </Button>
           </Box>
 
-          {/* Información del cliente */}
-          {loading && (
-            <Box sx={{ textAlign: "center" }}>
-              <CircularProgress />
-              <Typography>Cargando detalles del cliente...</Typography>
-            </Box>
-          )}
-          {error && <Alert severity="error">{error}</Alert>}
-          {!loading && !error && client && (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start", // Alinea ambos contenedores en la parte superior
-                  gap: "2rem", // Espaciado entre la información del cliente y los totales
-                  marginBottom: "1rem",
-                }}
-              >
-                {/* Información del Cliente */}
-                <Box>
-                  <Typography
-                    variant="h5"
-                    sx={{ color: themes[theme].customerDetails.sectionTitle }}
-                  >
-                    Información del Cliente
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.dynamicData }}
-                  >
-                    <strong
-                      style={{ color: themes[theme].customerDetails.label }}
-                    >
-                      Nombre:
-                    </strong>{" "}
-                    {client.name ?? "No hay nombre"}
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.dynamicData }}
-                  >
-                    <strong
-                      style={{ color: themes[theme].customerDetails.label }}
-                    >
-                      Apellido:
-                    </strong>{" "}
-                    {client.lastName ?? "No disponible"}
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.dynamicData }}
-                  >
-                    <strong
-                      style={{ color: themes[theme].customerDetails.label }}
-                    >
-                      Teléfono:
-                    </strong>{" "}
-                    {client.phone ?? "No disponible"}
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.dynamicData }}
-                  >
-                    <strong
-                      style={{ color: themes[theme].customerDetails.label }}
-                    >
-                      Dirección:
-                    </strong>{" "}
-                    {client.address ?? "No disponible"}
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.dynamicData }}
-                  >
-                    <strong
-                      style={{ color: themes[theme].customerDetails.label }}
-                    >
-                      Rut:
-                    </strong>{" "}
-                    {client.rut ?? "No disponible"}
-                  </Typography>
-                </Box>
+          {/* Tabla */}
 
-                {/* Totales de Deuda y Pago */}
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column", // Mantiene los totales en una columna
-                    alignItems: "flex-end", // Alinea el contenido a la derecha
-                    gap: "0.5rem", // Espaciado entre el total pagado y la deuda
-                  }}
-                >
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.totalsValue }}
-                  >
-                    <strong
-                      style={{
-                        color: themes[theme].customerDetails.totalsTitle,
-                      }}
-                    >
-                      Total Pagado:
-                    </strong>{" "}
-                    ${totalPaid}
-                  </Typography>
-                  <Typography
-                    sx={{ color: themes[theme].customerDetails.totalsValue }}
-                  >
-                    <strong
-                      style={{
-                        color: themes[theme].customerDetails.totalsTitle,
-                      }}
-                    >
-                      Total Deuda:
-                    </strong>{" "}
-                    ${totalDebt}
-                  </Typography>
-                </Box>
-              </Box>
-            </>
-          )}
+          <TableContainer
+            className="mt-3"
+            component={Paper}
+            sx={{
+              backgroundColor: themes[theme].sidebar.backgroundColor,
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    ID
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    ¿Pagado?
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    Precio Total
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    Método de Pago
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    Fecha
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    ¿Cuotas?
+                  </TableCell>
+                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                    Acciones
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      {order.id}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      {order.paid ? "Sí" : "No"}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      ${order.total_price}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      {order.pay_method === "cash"
+                        ? "Efectivo"
+                        : order.pay_method === "card"
+                        ? "Tarjeta"
+                        : order.pay_method === "transfer"
+                        ? "Transferencia"
+                        : "Otro"}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      {order.createdAt
+                        ? new Date(order.createdAt).toLocaleDateString()
+                        : "Fecha no disponible"}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      {order.is_installment ? "Sí" : "No"}
+                    </TableCell>
+                    <TableCell sx={{ color: themes[theme].menu.icon }}>
+                      <IconButton
+                        onClick={() => {
+                          navigate(
+                            `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_CLIENTS}/${id}/${PrivateRoutes.DETAILS_ORDER}/${order.id}`
+                          );
+                        }}
+                        sx={{
+                          color: "#1976d2",
+                          backgroundColor: "rgba(25, 118, 210, 0.1)",
+                          "&:hover": {
+                            backgroundColor: "rgba(25, 118, 210, 0.2)",
+                          },
+                        }}
+                      >
+                        <Visibility />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      )}
 
-          {/* Tabla de órdenes y botón para agregar */}
-          {!loading && !error && (
-            <>
-              {/* Botón para agregar orden */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start", // Alinea ambos contenedores en la parte superior
-                  gap: "2rem", // Espaciado entre la información del cliente y los totales
-                  marginBottom: "1rem",
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  sx={{ color: themes[theme].text.subtitle }}
-                >
-                  Órdenes del Cliente
-                </Typography>
-                <Button
-                  variant="contained"
-                  startIcon={<Add />}
-                  onClick={() => {
-                    navigate(PrivateRoutes.CREATE_ORDER);
-                  }}
-                  sx={{
-                    backgroundColor:
-                      themes[theme].customerDetails.addOrderButton
-                        .backgroundColor,
-                    color: themes[theme].customerDetails.addOrderButton.color,
-                    "&:hover": {
-                      backgroundColor: themes[theme].menu.hover,
-                    },
-                  }}
-                >
-                  Agregar Orden
-                </Button>
-              </Box>
-
-              {/* Tabla */}
-
-              <TableContainer
-                className="mt-3"
-                component={Paper}
-                sx={{
-                  backgroundColor: themes[theme].sidebar.backgroundColor,
-                }}
-              >
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        ID
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        ¿Pagado?
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        Precio Total
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        Método de Pago
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        Fecha
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        ¿Cuotas?
-                      </TableCell>
-                      <TableCell sx={{ color: themes[theme].menu.icon }}>
-                        Acciones
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {orders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.id}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.paid ? "Sí" : "No"}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          ${order.total_price}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.pay_method}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.createdAt
-                            ? new Date(order.createdAt).toLocaleDateString()
-                            : "Fecha no disponible"}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          {order.is_installment ? "Sí" : "No"}
-                        </TableCell>
-                        <TableCell sx={{ color: themes[theme].menu.icon }}>
-                          <IconButton
-                            onClick={() => {
-                              navigate(
-                                `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_CLIENTS}/${id}/${PrivateRoutes.DETAILS_ORDER}/${order.id}`
-                              );
-                            }}
-                            sx={{
-                              color: "#1976d2",
-                              backgroundColor: "rgba(25, 118, 210, 0.1)",
-                              "&:hover": {
-                                backgroundColor: "rgba(25, 118, 210, 0.2)",
-                              },
-                            }}
-                          >
-                            <Visibility />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          )}
-
-          {!loading && !error && !orders.length && (
-            <Typography
-              marginTop="30px"
-              sx={{ color: themes[theme].text.paragraph }}
-            >
-              No se encontraron órdenes para este cliente.
-            </Typography>
-          )}
-        </Box>
-      </main>
-    </div>
+      {!loading && !error && !orders.length && (
+        <Typography
+          marginTop="30px"
+          sx={{ color: themes[theme].text.paragraph }}
+        >
+          No se encontraron órdenes para este cliente.
+        </Typography>
+      )}
+    </Box>
   );
 };

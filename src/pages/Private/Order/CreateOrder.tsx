@@ -13,7 +13,6 @@ import {
 import { ArrowBack } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import { themes, useThemeContext } from "@/context";
 import {
   Installment,
@@ -189,187 +188,161 @@ export const CreateOrder: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", direction: "ltr" }}>
-      <AppSidebar />
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <PrimarySearchAppBar />
-        <Box
-          sx={{
-            backgroundColor: themes[theme].sidebar.backgroundColor,
-            color: themes[theme].text.paragraph,
-            padding: "2rem",
-            borderRadius: "8px",
-            width: "90%",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-            marginTop: "2rem",
-          }}
+    <Box
+      sx={{
+        backgroundColor: themes[theme].sidebar.backgroundColor,
+        color: themes[theme].text.paragraph,
+        padding: "2rem",
+        borderRadius: "8px",
+        width: "90%",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+        marginTop: "2rem",
+      }}
+    >
+      <Box sx={{ position: "relative", marginBottom: "1rem" }}>
+        <IconButton
+          onClick={() =>
+            navigate(
+              `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_CLIENTS}/${id}`
+            )
+          }
         >
-          <Box sx={{ position: "relative", marginBottom: "1rem" }}>
-            <IconButton
-              onClick={() =>
-                navigate(
-                  `/${PrivateRoutes.PRIVATE}/${PrivateRoutes.DETAILS_CLIENTS}/${id}`
-                )
-              }
+          <ArrowBack sx={{ color: themes[theme].menu.icon }} />
+        </IconButton>
+        <Typography
+          variant="h4"
+          sx={{ textAlign: "center", color: themes[theme].text.title }}
+        >
+          Crear Nueva Orden
+        </Typography>
+      </Box>
+
+      {loading && (
+        <Box sx={{ textAlign: "center" }}>
+          <CircularProgress />
+          <Typography>Creando orden...</Typography>
+        </Box>
+      )}
+
+      {error && <Alert severity="error">{error}</Alert>}
+
+      {!loading && (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <Typography variant="h6">Productos Seleccionados:</Typography>
+
+          {orderData.products.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
             >
-              <ArrowBack sx={{ color: themes[theme].menu.icon }} />
-            </IconButton>
-            <Typography
-              variant="h4"
-              sx={{ textAlign: "center", color: themes[theme].text.title }}
-            >
-              Crear Nueva Orden
-            </Typography>
-          </Box>
-
-          {loading && (
-            <Box sx={{ textAlign: "center" }}>
-              <CircularProgress />
-              <Typography>Creando orden...</Typography>
-            </Box>
-          )}
-
-          {error && <Alert severity="error">{error}</Alert>}
-
-          {!loading && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <Typography variant="h6">Productos Seleccionados:</Typography>
-
-              {orderData.products.map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography>
-                    {products.find((p) => p.id === item.product_id)?.name} -{" "}
-                    {item.quantity} unidades
-                  </Typography>
-                  <Button
-                    color="error"
-                    onClick={() => handleRemoveProduct(index)}
-                  >
-                    Eliminar
-                  </Button>
-                </Box>
-              ))}
-
               <Typography>
-                Total: ${orderData.total_price.toFixed(2)}
+                {products.find((p) => p.id === item.product_id)?.name} -{" "}
+                {item.quantity} unidades
               </Typography>
-
-              <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-                <Autocomplete
-                  options={products}
-                  getOptionLabel={(option) => option.name || ""}
-                  value={
-                    products.find((product) => product.name === searchValue) ||
-                    null
-                  }
-                  onInputChange={(e, newValue) => setSearchValue(newValue)}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Buscar Producto" />
-                  )}
-                  onChange={(e, product) =>
-                    product && setSelectedProduct(product)
-                  }
-                  sx={{ flex: 2 }}
-                />
-
-                <TextField
-                  label="Cantidad"
-                  type="number"
-                  value={selectedQuantity}
-                  onChange={(e) => setSelectedQuantity(Number(e.target.value))}
-                  fullWidth
-                  sx={{ flex: 1 }}
-                />
-
-                <Typography variant="body2" color="textSecondary">
-                  Stock:{" "}
-                  {selectedProduct
-                    ? products.find((p) => p.id === selectedProduct.id)?.stock
-                    : "-"}
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  onClick={() =>
-                    selectedProduct && handleAddProduct(selectedProduct.id)
-                  }
-                  disabled={
-                    !selectedProduct ||
-                    selectedQuantity <= 0 ||
-                    selectedQuantity >
-                      (products.find((p) => p.id === selectedProduct?.id)
-                        ?.stock ?? 0)
-                  }
-                  sx={{ flex: 1 }}
-                >
-                  Agregar
-                </Button>
-              </Box>
-
-              <TextField
-                label="Método de Pago"
-                select
-                name="pay_method"
-                value={orderData.pay_method}
-                onChange={(e) =>
-                  setOrderData({ ...orderData, pay_method: e.target.value })
-                }
-                fullWidth
-              >
-                <MenuItem value="cash">Efectivo</MenuItem>
-                <MenuItem value="card">Tarjeta</MenuItem>
-                <MenuItem value="transfer">Transferencia</MenuItem>
-              </TextField>
-
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                <Typography>¿Con Cuotas?</Typography>
-                <Checkbox
-                  checked={orderData.is_installment}
-                  onChange={(e) =>
-                    setOrderData({
-                      ...orderData,
-                      is_installment: e.target.checked,
-                    })
-                  }
-                />
-              </Box>
-
-              {orderData.is_installment && (
-                <TextField
-                  label="Cantidad de Cuotas"
-                  type="number"
-                  value={installmentsQuantity}
-                  onChange={(e) =>
-                    setInstallmentsQuantity(Number(e.target.value))
-                  }
-                  fullWidth
-                />
-              )}
-
-              <Button variant="contained" onClick={handleSubmit}>
-                Crear Orden
+              <Button color="error" onClick={() => handleRemoveProduct(index)}>
+                Eliminar
               </Button>
             </Box>
+          ))}
+
+          <Typography>Total: ${orderData.total_price.toFixed(2)}</Typography>
+
+          <Box sx={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+            <Autocomplete
+              options={products}
+              getOptionLabel={(option) => option.name || ""}
+              value={
+                products.find((product) => product.name === searchValue) || null
+              }
+              onInputChange={(e, newValue) => setSearchValue(newValue)}
+              renderInput={(params) => (
+                <TextField {...params} label="Buscar Producto" />
+              )}
+              onChange={(e, product) => product && setSelectedProduct(product)}
+              sx={{ flex: 2 }}
+            />
+
+            <TextField
+              label="Cantidad"
+              type="number"
+              value={selectedQuantity}
+              onChange={(e) => setSelectedQuantity(Number(e.target.value))}
+              fullWidth
+              sx={{ flex: 1 }}
+            />
+
+            <Typography variant="body2" color="textSecondary">
+              Stock:{" "}
+              {selectedProduct
+                ? products.find((p) => p.id === selectedProduct.id)?.stock
+                : "-"}
+            </Typography>
+
+            <Button
+              variant="contained"
+              onClick={() =>
+                selectedProduct && handleAddProduct(selectedProduct.id)
+              }
+              disabled={
+                !selectedProduct ||
+                selectedQuantity <= 0 ||
+                selectedQuantity >
+                  (products.find((p) => p.id === selectedProduct?.id)?.stock ??
+                    0)
+              }
+              sx={{ flex: 1 }}
+            >
+              Agregar
+            </Button>
+          </Box>
+
+          <TextField
+            label="Método de Pago"
+            select
+            name="pay_method"
+            value={orderData.pay_method}
+            onChange={(e) =>
+              setOrderData({ ...orderData, pay_method: e.target.value })
+            }
+            fullWidth
+          >
+            <MenuItem value="cash">Efectivo</MenuItem>
+            <MenuItem value="card">Tarjeta</MenuItem>
+            <MenuItem value="transfer">Transferencia</MenuItem>
+          </TextField>
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <Typography>¿Con Cuotas?</Typography>
+            <Checkbox
+              checked={orderData.is_installment}
+              onChange={(e) =>
+                setOrderData({
+                  ...orderData,
+                  is_installment: e.target.checked,
+                })
+              }
+            />
+          </Box>
+
+          {orderData.is_installment && (
+            <TextField
+              label="Cantidad de Cuotas"
+              type="number"
+              value={installmentsQuantity}
+              onChange={(e) => setInstallmentsQuantity(Number(e.target.value))}
+              fullWidth
+            />
           )}
+
+          <Button variant="contained" onClick={handleSubmit}>
+            Crear Orden
+          </Button>
         </Box>
-      </main>
-    </div>
+      )}
+    </Box>
   );
 };

@@ -1,5 +1,6 @@
 export interface ResponseAPI {
     success?: boolean;
+    expired?: boolean;
     message?: string;
     data?: unknown;
     errors?: Error[];

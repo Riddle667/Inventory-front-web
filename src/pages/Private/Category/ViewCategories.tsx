@@ -1,6 +1,5 @@
 import { themes } from "@/context/themes/themes";
 import { useThemeContext } from "@/context/themes/themesContext";
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
 import { Category } from "@/models";
 import { resetUser } from "@/redux";
 import { AppStore } from "@/redux/store";
@@ -17,6 +16,7 @@ import {
   Paper,
   TextField,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -93,24 +93,6 @@ export const ViewCategories: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        direction: "ltr",
-      }}
-    >
-      <AppSidebar />
-      <main
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <PrimarySearchAppBar />
         <Box
           sx={{
             backgroundColor: themes[theme].sidebar.backgroundColor,
@@ -128,12 +110,13 @@ export const ViewCategories: React.FC = () => {
             gutterBottom
             sx={{ color: themes[theme].menu.icon }}
           >
-            Lista de Categorias
+            Lista de Categorías
           </Typography>
+  
           <div className="sm:flex sm:items-center sm:justify-between sm:space-x-10">
             <div>
               <p className="mt-1 text-tremor-default leading-6 text-tremor-content dark:text-dark-tremor-content">
-                Ingresa el ID o nombre de la categoria para filtrar.
+                Ingresa el ID o nombre de la categoría para filtrar.
               </p>
             </div>
             <button
@@ -141,13 +124,18 @@ export const ViewCategories: React.FC = () => {
               className="mt-4 w-full whitespace-nowrap rounded-tremor-small bg-tremor-brand px-4 py-2.5 text-tremor-default font-medium text-tremor-brand-inverted shadow-tremor-input hover:bg-tremor-brand-emphasis dark:bg-dark-tremor-brand dark:text-dark-tremor-brand-inverted dark:shadow-dark-tremor-input dark:hover:bg-dark-tremor-brand-emphasis sm:mt-0 sm:w-fit"
               onClick={handleAddCategory}
             >
-              Agregar Categoria
+              Agregar Categoría
             </button>
           </div>
+  
           <TableContainer
             className="mt-8"
             component={Paper}
-            sx={{ backgroundColor: themes[theme].sidebar.backgroundColor }}
+            sx={{
+              backgroundColor: themes[theme].sidebar.backgroundColor,
+              overflowX: "auto",
+              marginTop: "2rem",
+            }}
           >
             <Table>
               <TableHead>
@@ -182,7 +170,9 @@ export const ViewCategories: React.FC = () => {
                       />
                     </TableCell>
                   ))}
+                  <TableCell />
                 </TableRow>
+  
                 <TableRow>
                   <TableCell sx={{ color: themes[theme].menu.icon }}>
                     ID
@@ -190,56 +180,72 @@ export const ViewCategories: React.FC = () => {
                   <TableCell sx={{ color: themes[theme].menu.icon }}>
                     Nombre
                   </TableCell>
-                  <TableCell sx={{ color: themes[theme].menu.icon }}>
+                  <TableCell
+                    align="center"
+                    sx={{ color: themes[theme].menu.icon }}
+                  >
                     Acciones
                   </TableCell>
                 </TableRow>
               </TableHead>
+  
               <TableBody>
                 {filteredCategories.map((category) => (
-                  <TableRow key={category.id}>
+                  <TableRow
+                    key={category.id}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
+                      transition: "background-color 0.2s",
+                    }}
+                  >
                     <TableCell sx={{ color: themes[theme].sidebar.color }}>
                       {category.id}
                     </TableCell>
                     <TableCell sx={{ color: themes[theme].sidebar.color }}>
                       {category.name}
                     </TableCell>
-                    <TableCell sx={{ color: themes[theme].sidebar.color }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "8px",
-                          justifyContent: "center",
-                        }}
-                      >
-                        {/* Botón de editar */}
-                        <IconButton
-                          onClick={() => {handleEditCategory(category.id)}}
-                          sx={{
-                            color: "#1976d2",
-                            backgroundColor: "rgba(25, 118, 210, 0.1)",
-                            "&:hover": {
-                              backgroundColor: "rgba(25, 118, 210, 0.2)",
-                            },
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-
-                        {/* Botón de eliminar */}
-                        <IconButton
-                          onClick={() => {handleDeleteCategory(category.id)}}
-                          sx={{
-                            color: "#d32f2f",
-                            backgroundColor: "rgba(211, 47, 47, 0.1)",
-                            "&:hover": {
-                              backgroundColor: "rgba(211, 47, 47, 0.2)",
-                            },
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </div>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: themes[theme].sidebar.color,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box display="flex" justifyContent="center" gap={1}>
+                        <Tooltip title="Editar categoría">
+                          <IconButton
+                            onClick={() => handleEditCategory(category.id)}
+                            sx={{
+                              color: "#1976d2",
+                              backgroundColor: "rgba(25, 118, 210, 0.1)",
+                              "&:hover": {
+                                backgroundColor: "rgba(25, 118, 210, 0.2)",
+                              },
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+  
+                        <Tooltip title="Eliminar categoría">
+                          <IconButton
+                            onClick={() => handleDeleteCategory(category.id)}
+                            sx={{
+                              color: "#d32f2f",
+                              backgroundColor: "rgba(211, 47, 47, 0.1)",
+                              "&:hover": {
+                                backgroundColor: "rgba(211, 47, 47, 0.2)",
+                              },
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -247,7 +253,5 @@ export const ViewCategories: React.FC = () => {
             </Table>
           </TableContainer>
         </Box>
-      </main>
-    </div>
   );
 };

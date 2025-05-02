@@ -1,5 +1,3 @@
-import { AppSidebar, PrimarySearchAppBar } from "@/layout";
-import { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -11,45 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 export const UserView = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [hasImage, setHasImage] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
-
-  // handle on theme change event
-  const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTheme(e.target.checked ? "dark" : "light");
-  };
-
-  // handle on image change event
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHasImage(e.target.checked);
-  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        direction: "ltr",
-      }}
-    >
-      <AppSidebar
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-        hasImage={hasImage}
-        theme={theme}
-      />
-      <main style={{ flexGrow: 1 }}>
-        <PrimarySearchAppBar
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          hasImage={hasImage}
-          setHasImage={setHasImage}
-          theme={theme}
-          setTheme={setTheme}
-          handleThemeChange={handleThemeChange}
-          handleImageChange={handleImageChange}
-        />
         <div className="w-full max-w-6xl mx-auto py-8 px-4 md:px-6">
           <header className="mb-6">
             <h1 className="text-2xl font-bold">Clientes</h1>
@@ -130,7 +91,5 @@ export const UserView = () => {
             </Table>
           </div>
         </div>
-      </main>
-    </div>
   );
 };

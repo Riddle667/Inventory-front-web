@@ -39,6 +39,11 @@ export const PrivateRoutes = {
 
     // section reports
 
-    // section settings
+    // section user
+    PROFILE: 'profile',
+    UPDATE_PROFILE: 'update-profile',
+    CHANGE_PASSWORD: 'change-password',
+    
+    
 
 }

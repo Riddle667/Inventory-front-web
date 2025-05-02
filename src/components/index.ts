@@ -8,6 +8,8 @@ export * from './chart/BarChartComponent';
 export * from './chart/DataTableComponent';
 export * from './chart/DonutChartComponent';
 export * from './chart/LineChartComponent';
+export * from './modals/ChangePasswordModal';
 export * from './modals/GenericConfirmationModal';
+export * from './modals/UpdateProfileImageModal';
 export * from './ui/button';
 export * from './ui/table';

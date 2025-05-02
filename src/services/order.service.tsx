@@ -9,6 +9,8 @@ export interface OrderService {
     getOrders: (token: string) => Promise<ResponseAPI>;
     updateOrder: (token: string, order: Order) => Promise<ResponseAPI>;
     deleteOrder: (token: string, id: number) => Promise<ResponseAPI>;
+    payOrder: (token: string, id: number) => Promise<ResponseAPI>;
+    payInstallmentOrder: (token: string, id: number, idInstallment: number) => Promise<ResponseAPI>;
 }
 
 export class OrderServiceImpl implements OrderService {
@@ -72,6 +74,34 @@ export class OrderServiceImpl implements OrderService {
     async deleteOrder(token: string, id: number): Promise<ResponseAPI> {
         try {
             const { data } = await api.delete<ResponseAPI>(`/orders/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return data;
+        } catch (error) {
+            const e = error as AxiosError & ResponseAPI;
+            return Promise.reject(e.response?.data);
+        }
+    }
+
+    async payOrder(token: string, id: number): Promise<ResponseAPI> {
+        try {
+            const { data } = await api.put<ResponseAPI>(`/order/pay-order/${id}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return data;
+        } catch (error) {
+            const e = error as AxiosError & ResponseAPI;
+            return Promise.reject(e.response?.data);
+        }
+    }
+
+    async payInstallmentOrder(token: string, id: number, idInstallment: number): Promise<ResponseAPI> {
+        try {
+            const { data } = await api.put<ResponseAPI>(`/order/pay-installment-order/${id}/${idInstallment}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
